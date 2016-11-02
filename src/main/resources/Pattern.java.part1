@@ -1,0 +1,8 @@
+import java.util.*;
+import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.*;
+import com.arsenarsen.userbot.*;
+import com.arsenarsen.userbot.command.*;
+
+public class Pattern {
+	public static Object execute(MessageChannel channel){
