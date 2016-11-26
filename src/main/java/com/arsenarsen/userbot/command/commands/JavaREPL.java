@@ -2,6 +2,7 @@ package com.arsenarsen.userbot.command.commands;
 
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.Command;
+import com.arsenarsen.userbot.util.FileUtils;
 import com.arsenarsen.userbot.util.Messages;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -13,10 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.concurrent.*;
 
 /**
@@ -83,8 +80,8 @@ public class JavaREPL implements Command {
                 future.get(15, TimeUnit.SECONDS);
                 if (!timer.isTerminated())
                     timer.shutdownNow();
-                delete(classStorage);
-                delete(classFile.getParentFile());
+                FileUtils.delete(classStorage);
+                FileUtils.delete(classFile.getParentFile());
             } catch (IOException e) {
                 Messages.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Compilation failure!", e, msg);
             } catch (ClassNotFoundException ignored) {
@@ -108,13 +105,6 @@ public class JavaREPL implements Command {
         compiler.run(null, compilerStream, compilerStream, classFile.getAbsolutePath(), "-d", classStorage.getAbsolutePath());
         URLClassLoader loader = new URLClassLoader(new URL[]{classStorage.toURI().toURL()}, getClass().getClassLoader());
         return loader.loadClass("pkg" + time + ".Pattern");
-    }
-
-    private void delete(File toRecurse) throws IOException {
-        Files.walk(toRecurse.toPath(), FileVisitOption.FOLLOW_LINKS)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
     }
 
     @Override

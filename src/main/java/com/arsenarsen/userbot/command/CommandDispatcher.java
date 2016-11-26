@@ -4,6 +4,7 @@ import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.commands.Flippin;
 import com.arsenarsen.userbot.command.commands.JavaREPL;
 import com.arsenarsen.userbot.command.commands.Quote;
+import com.arsenarsen.userbot.command.commands.Update;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -29,6 +30,7 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new JavaREPL());
         registerCommand(new Flippin());
         registerCommand(new Quote());
+        registerCommand(new Update());
     }
 
     public boolean registerCommand(Command command){

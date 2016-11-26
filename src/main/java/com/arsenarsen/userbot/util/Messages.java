@@ -35,4 +35,8 @@ public class Messages {
         mesg.editMessage(ctn).queue();
         pw.close();
     }
+
+    public static void edit(Message msg, String s) {
+        msg.editMessage(s.substring(0, Math.min(s.length(), 1999))).queue();
+    }
 }
