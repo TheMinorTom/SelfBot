@@ -4,7 +4,9 @@ import com.arsenarsen.userbot.command.CommandDispatcher;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +22,7 @@ import java.util.Properties;
  * <br>
  * Created by Arsen on 21.9.16..
  */
-public class UserBot {
+public class UserBot extends ListenerAdapter {
 
     /* CONSTANTS */
     public static final Logger LOGGER = LoggerFactory.getLogger(UserBot.class);
@@ -55,7 +57,8 @@ public class UserBot {
         }
         token = getConfig().getProperty("token");
         try {
-            jda = new JDABuilder(AccountType.CLIENT).addListener((dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
+            jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
+
         } catch (RateLimitedException | LoginException e) {
             LOGGER.error("Could not log in!", e);
         }
@@ -74,12 +77,21 @@ public class UserBot {
         return config;
     }
 
+    public void saveConfig() {
+        try {
+            getConfig().store(new FileWriter(SETTINGS), "UserBot settings file");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void saveDefaultConfig() throws IOException {
         // This is gonna hurt..
         Properties defaults = new Properties();
         defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
         defaults.setProperty("id", "INSERT YOUR USER ID HERE");
         defaults.setProperty("prefix", "me.");
+        defaults.setProperty("template", "");
 
         defaults.store(new FileWriter(SETTINGS), "UserBot settings file");
     }
@@ -90,6 +102,11 @@ public class UserBot {
 
     public CommandDispatcher getDispatcher() {
         return dispatcher;
+    }
+
+    @Override
+    public void onReady(ReadyEvent event) {
+        LOGGER.info("Booted!");
     }
 
     /* STATICS */

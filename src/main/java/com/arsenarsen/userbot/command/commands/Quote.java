@@ -1,0 +1,45 @@
+package com.arsenarsen.userbot.command.commands;
+
+import com.arsenarsen.userbot.UserBot;
+import com.arsenarsen.userbot.command.Command;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
+
+import java.awt.*;
+import java.time.format.DateTimeFormatter;
+
+public class Quote implements Command {
+    @Override
+    public void dispatch(String[] args, MessageChannel channel, Message msg) {
+        if (args.length >= 2) {
+            if (args[0].matches("\\d+")) {
+                channel.getHistoryAround(args[0], 100).queue(messageHistory -> {
+                    Message msg2 = messageHistory.getMessageById(args[0]);
+                    if (msg2 != null) {
+                        User auth = msg2.getAuthor();
+                        String cnt = msg.getRawContent();
+                        msg.deleteMessage().queue();
+                        cnt = cnt.substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1);
+                        cnt = cnt.substring(args[0].length());
+                        channel.sendMessage(new MessageBuilder()
+                                .setEmbed(new EmbedBuilder().setAuthor(auth.getName() + '#' + auth.getDiscriminator(), null, auth.getAvatarUrl())
+                                        .setDescription(msg2.getRawContent())
+                                        .setColor(Color.DARK_GRAY)
+                                        .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)
+                                        .build())
+                                .appendString(cnt)
+                                .build()).queue();
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public String getName() {
+        return "quote";
+    }
+}

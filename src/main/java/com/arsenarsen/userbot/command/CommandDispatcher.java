@@ -3,6 +3,7 @@ package com.arsenarsen.userbot.command;
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.commands.Flippin;
 import com.arsenarsen.userbot.command.commands.JavaREPL;
+import com.arsenarsen.userbot.command.commands.Quote;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -13,8 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -25,11 +24,11 @@ import java.util.stream.Collectors;
 public class CommandDispatcher extends ListenerAdapter {
 
     private Map<String, Command> commands = new HashMap<>();
-    private ExecutorService pool = Executors.newFixedThreadPool(10);
 
     public CommandDispatcher(){
         registerCommand(new JavaREPL());
         registerCommand(new Flippin());
+        registerCommand(new Quote());
     }
 
     public boolean registerCommand(Command command){
@@ -64,7 +63,7 @@ public class CommandDispatcher extends ListenerAdapter {
                         || content.equalsIgnoreCase(prefix + c.getName())){
                     String[] split = split(content, c, prefix);
                     UserBot.LOGGER.info("Dispatching command '" + c.getName().toLowerCase() + "' with split: " + Arrays.toString(split));
-                    pool.submit(() -> c.dispatch(split, channel, msg));
+                    c.dispatch(split, channel, msg);
                     break;
                 }
             }
@@ -81,4 +80,5 @@ public class CommandDispatcher extends ListenerAdapter {
         }
         return content.split("\\s");
     }
+
 }
