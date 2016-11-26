@@ -20,6 +20,7 @@ public class Update implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
         try {
+            Messages.edit(msg, "Updating!");
             File tmp = new File(System.getProperty("java.io.tmpdir"));
             File repo = new File(tmp, "SelfBot" + System.currentTimeMillis());
             ProcessBuilder clone = new ProcessBuilder("git", "clone", "https://github.com/ArsenArsen/SelfBot.git", repo.getAbsolutePath())
@@ -62,6 +63,7 @@ public class Update implements Command {
             Files.copy(current.toPath(), Paths.get(current.getPath().replace(".jar", ".backup.jar")), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(new File(repo, "target" + File.separator + "UserBot-jar-with-dependencies.jar").toPath(), current.toPath(), StandardCopyOption.REPLACE_EXISTING);
             FileUtils.delete(repo);
+            Messages.edit(msg, "Aight! Rebooting!");
             System.exit(0);
         } catch (IOException | InterruptedException e) {
             Messages.updateWithException("Failed to update!", e, msg);
