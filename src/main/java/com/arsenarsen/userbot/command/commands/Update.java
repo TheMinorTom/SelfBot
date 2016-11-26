@@ -40,7 +40,7 @@ public class Update implements Command {
                 Messages.edit(msg, "Failed to git clone!\n" + cloneLog);
                 return;
             }
-            ProcessBuilder build = new ProcessBuilder("mvn", "-U", repo.getAbsolutePath())
+            ProcessBuilder build = new ProcessBuilder("mvn", "-U")
                     .redirectErrorStream(true)
                     .directory(repo);
             Process pBuild = build.start();
