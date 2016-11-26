@@ -1,10 +1,7 @@
 package com.arsenarsen.userbot.command;
 
 import com.arsenarsen.userbot.UserBot;
-import com.arsenarsen.userbot.command.commands.Flippin;
-import com.arsenarsen.userbot.command.commands.JavaREPL;
-import com.arsenarsen.userbot.command.commands.Quote;
-import com.arsenarsen.userbot.command.commands.Update;
+import com.arsenarsen.userbot.command.commands.*;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -31,6 +28,7 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new Flippin());
         registerCommand(new Quote());
         registerCommand(new Update());
+        registerCommand(new Execute());
     }
 
     public boolean registerCommand(Command command){

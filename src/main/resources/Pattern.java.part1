@@ -5,4 +5,4 @@ import com.arsenarsen.userbot.*;
 import com.arsenarsen.userbot.command.*;
 
 public class Pattern {
-	public static Object execute(MessageChannel channel){
+	public static Object execute(MessageChannel channel) throws Exception {
