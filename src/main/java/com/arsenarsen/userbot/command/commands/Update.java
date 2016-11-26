@@ -62,6 +62,7 @@ public class Update implements Command {
             Files.copy(current.toPath(), Paths.get(current.getPath().replace(".jar", ".backup.jar")), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(new File(repo, "target" + File.separator + "UserBot-jar-with-dependencies.jar").toPath(), current.toPath(), StandardCopyOption.REPLACE_EXISTING);
             FileUtils.delete(repo);
+            System.exit(0);
         } catch (IOException | InterruptedException e) {
             Messages.updateWithException("Failed to update!", e, msg);
         }
