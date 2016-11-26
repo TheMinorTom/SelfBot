@@ -43,7 +43,7 @@ public class Update implements Command {
             ProcessBuilder build = new ProcessBuilder("mvn", "-U", repo.getAbsolutePath())
                     .redirectErrorStream(true)
                     .directory(repo);
-            Process pBuild = clone.start();
+            Process pBuild = build.start();
             String buildLog = "";
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(pBuild.getInputStream()))) {
                 while (pBuild.isAlive()) {
