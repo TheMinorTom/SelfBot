@@ -15,7 +15,7 @@ public class Quote implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
         if (args.length >= 2) {
-            if (args[0].matches("\\d+")) {
+            if (args[0].matches("[\\d]+")) {
                 channel.getHistoryAround(args[0], 100).queue(messageHistory -> {
                     Message msg2 = messageHistory.getMessageById(args[0]);
                     if (msg2 != null) {
@@ -27,8 +27,9 @@ public class Quote implements Command {
                         channel.sendMessage(new MessageBuilder()
                                 .setEmbed(new EmbedBuilder().setAuthor(auth.getName() + '#' + auth.getDiscriminator(), null, auth.getAvatarUrl())
                                         .setDescription(msg2.getRawContent())
-                                        .setColor(Color.DARK_GRAY)
+                                        .setColor(new Color((int)(Math.random() * 0x1000000)))
                                         .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)
+                                        .addField("Channel: ", "<#" + channel.getId() + ">", true)
                                         .build())
                                 .appendString(cnt)
                                 .build()).queue();
