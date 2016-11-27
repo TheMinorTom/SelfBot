@@ -31,7 +31,7 @@ public class Quote implements Command {
                                 .addField("Channel: ", "<#" + channel.getId() + ">", true);
                         int i = 0;
                         for(Message.Attachment attachment : msg2.getAttachments()){
-                            builder.addField("Attachment #" + (++i), attachment.getUrl(), true);
+                            builder.setImage(attachment.getUrl());
                         }
                         channel.sendMessage(new MessageBuilder()
                                 .setEmbed(builder.build())
