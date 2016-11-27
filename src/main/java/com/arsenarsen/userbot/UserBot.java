@@ -59,8 +59,8 @@ public class UserBot extends ListenerAdapter {
         }
         token = getConfig().getProperty("token");
         try {
-            jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildBlocking();
-            UserBot.getInstance().getJda().addEventListener(new ListenerAdapter() {
+            jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
+            jda.addEventListener(new ListenerAdapter() {
                 @Override
                 public void onMessageReceived(MessageReceivedEvent event) {
                     if(!event.getMessage().getMentionedUsers().contains(UserBot.getInstance().getJda().getSelfUser()))
@@ -73,7 +73,7 @@ public class UserBot extends ListenerAdapter {
                     }
                 }
             });
-        } catch (InterruptedException | RateLimitedException | LoginException e) {
+        } catch (RateLimitedException | LoginException e) {
             LOGGER.error("Could not log in!", e);
         }
     }
