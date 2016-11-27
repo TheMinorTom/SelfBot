@@ -18,6 +18,8 @@ public class AFK implements Command {
         UserBot.getInstance().getJda().addEventListener(new ListenerAdapter() {
             @Override
             public void onMessageReceived(MessageReceivedEvent event) {
+                if(!event.getMessage().getMentionedUsers().contains(UserBot.getInstance().getJda().getSelfUser()))
+                    return;
                 if(event.getAuthor().equals(UserBot.getInstance().getJda().getSelfUser()) && !event.getMessage()
                         .getRawContent().matches("<@!?\\d+> I am AFK!")){
                     afk.set(false);
