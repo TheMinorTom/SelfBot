@@ -9,3 +9,5 @@ Your user token can be obtained by pressing `CTRL` + `SHIFT` + `I` and typing in
 Take the part between the `"`s and put it into the settings file.
 
 After all of that is done, just run the bot again, and have fun :)
+
+# You can download the latest jar [here](https://ci.arsenarsen.com/job/SelfBot/)
