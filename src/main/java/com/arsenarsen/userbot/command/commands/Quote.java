@@ -30,7 +30,7 @@ public class Quote implements Command {
                                 .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)
                                 .addField("Channel: ", "<#" + channel.getId() + ">", true);
                         int i = 0;
-                        for(Message.Attachment attachment : msg.getAttachments()){
+                        for(Message.Attachment attachment : msg2.getAttachments()){
                             builder.addField("Attachment #" + (++i), attachment.getUrl(), true);
                         }
                         channel.sendMessage(new MessageBuilder()
