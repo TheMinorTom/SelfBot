@@ -20,7 +20,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.0.BETA_95</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
