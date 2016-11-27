@@ -24,13 +24,17 @@ public class Quote implements Command {
                         msg.deleteMessage().queue();
                         cnt = cnt.substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1);
                         cnt = cnt.substring(args[0].length());
+                        EmbedBuilder builder = new EmbedBuilder().setAuthor(auth.getName() + '#' + auth.getDiscriminator(), null, auth.getAvatarUrl())
+                                .setDescription(msg2.getRawContent())
+                                .setColor(new Color((int)(Math.random() * 0x1000000)))
+                                .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)
+                                .addField("Channel: ", "<#" + channel.getId() + ">", true);
+                        int i = 0;
+                        for(Message.Attachment attachment : msg.getAttachments()){
+                            builder.addField("Attachment #" + (++i), attachment.getUrl(), true);
+                        }
                         channel.sendMessage(new MessageBuilder()
-                                .setEmbed(new EmbedBuilder().setAuthor(auth.getName() + '#' + auth.getDiscriminator(), null, auth.getAvatarUrl())
-                                        .setDescription(msg2.getRawContent())
-                                        .setColor(new Color((int)(Math.random() * 0x1000000)))
-                                        .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)
-                                        .addField("Channel: ", "<#" + channel.getId() + ">", true)
-                                        .build())
+                                .setEmbed(builder.build())
                                 .appendString(cnt)
                                 .build()).queue();
                     }

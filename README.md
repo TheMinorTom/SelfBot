@@ -8,6 +8,4 @@ Once you have the dependicies listed above installed correctly you can run the b
 Your user token can be obtained by pressing `CTRL` + `SHIFT` + `I` and typing in `localStorage.token`. 
 Take the part between the `"`s and put it into the settings file.
 
-Your user ID can be gotten by typing in `\@YourMention` and then copying the part between `<@` and `>`
-
 After all of that is done, just run the bot again, and have fun :)
