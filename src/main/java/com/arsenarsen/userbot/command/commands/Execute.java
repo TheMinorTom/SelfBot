@@ -6,7 +6,10 @@ import com.arsenarsen.userbot.util.Messages;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Execute implements Command {
     @Override
@@ -17,16 +20,21 @@ public class Execute implements Command {
             pb.directory(new File(System.getProperty("java.io.tmpdir")));
             Process p = pb.start();
             String out = "";
-            try(BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))){
-                while(p.isAlive()){
+            long a = System.currentTimeMillis();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+                while (System.currentTimeMillis() - a < 15000 && p.isAlive()) {
                     String line;
-                    if((line = reader.readLine()) != null)
+                    if ((line = reader.readLine()) != null)
                         out += line + '\n';
                 }
             }
-            p.waitFor();
-            Messages.edit(msg, "Evaluating...\n```\n"+out+"\n```Exit code: " + p.exitValue());
-        } catch (InterruptedException | IOException e){
+            if (p.isAlive()){
+                p.destroyForcibly();
+                Messages.edit(msg, "Timed out!");
+                return;
+            }
+            Messages.edit(msg, "Evaluating...\n```\n" + out + "\n```Exit code: " + p.exitValue());
+        } catch (IOException e) {
             UserBot.LOGGER.error("Could not exec!", e);
             Messages.updateWithException("Could not eval!", e, msg);
         }

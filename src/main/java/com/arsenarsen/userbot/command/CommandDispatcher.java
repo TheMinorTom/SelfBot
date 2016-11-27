@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class CommandDispatcher extends ListenerAdapter {
 
     private Map<String, Command> commands = new HashMap<>();
+    private ExecutorService threadPoolExecutor = Executors.newCachedThreadPool();
 
     public CommandDispatcher(){
         registerCommand(new JavaREPL());
@@ -63,7 +66,7 @@ public class CommandDispatcher extends ListenerAdapter {
                         || content.equalsIgnoreCase(prefix + c.getName())){
                     String[] split = split(content, c, prefix);
                     UserBot.LOGGER.info("Dispatching command '" + c.getName().toLowerCase() + "' with split: " + Arrays.toString(split));
-                    c.dispatch(split, channel, msg);
+                    threadPoolExecutor.submit(() -> c.dispatch(split, channel, msg));
                     break;
                 }
             }
