@@ -103,7 +103,6 @@ public class UserBot extends ListenerAdapter {
         // This is gonna hurt..
         Properties defaults = new Properties();
         defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
-        defaults.setProperty("id", "INSERT YOUR USER ID HERE");
         defaults.setProperty("prefix", "me.");
 
         defaults.store(new FileWriter(SETTINGS), "UserBot settings file");

@@ -26,7 +26,7 @@ public class CommandDispatcher extends ListenerAdapter {
     private Map<String, Command> commands = new HashMap<>();
     private ExecutorService threadPoolExecutor = Executors.newCachedThreadPool();
 
-    public CommandDispatcher(){
+    public CommandDispatcher() {
         registerCommand(new JavaREPL());
         registerCommand(new Flippin());
         registerCommand(new Quote());
@@ -38,36 +38,36 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new Reboot());
     }
 
-    public boolean registerCommand(Command command){
-        if(command.getName().contains(" ")){
+    public boolean registerCommand(Command command) {
+        if (command.getName().contains(" ")) {
             throw new IllegalArgumentException("Name must not have spaces!");
         }
-        if(commands.containsKey(command.getName().toLowerCase())){
+        if (commands.containsKey(command.getName().toLowerCase())) {
             return false;
         }
         commands.put(command.getName().toLowerCase(), command);
         return true;
     }
 
-    public List<String> getCommands(){
+    public List<String> getCommands() {
         return commands.keySet().stream().collect(Collectors.toList());
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        Message msg = event.getMessage();
         User author = event.getAuthor();
-        MessageChannel channel = event.getChannel();
+        Message msg = event.getMessage();
         String content = msg.getRawContent().trim();
         String prefix = UserBot.getInstance().getConfig().getProperty("prefix");
-        while(content.contains("  ")){
+        if (author.getId().equals(event.getJDA().getSelfUser().getId())
+                &&content.toLowerCase().startsWith(prefix.toLowerCase())){
+        MessageChannel channel = event.getChannel();
+        while (content.contains("  ")) {
             content = content.replaceAll("\\s{2}", " ");
         }
-        if(author.getId().equals(UserBot.getInstance().getConfig().getProperty("id"))
-                && content.toLowerCase().startsWith(prefix.toLowerCase())){
-            for(Command c : commands.values()){
-                if(content.toLowerCase().startsWith(prefix.toLowerCase() + c.getName() + ' ')
-                        || content.equalsIgnoreCase(prefix + c.getName())){
+            for (Command c : commands.values()) {
+                if (content.toLowerCase().startsWith(prefix.toLowerCase() + c.getName() + ' ')
+                        || content.equalsIgnoreCase(prefix + c.getName())) {
                     String[] split = split(content, c, prefix);
                     UserBot.LOGGER.info("Dispatching command '" + c.getName().toLowerCase() + "' with split: " + Arrays.toString(split));
                     threadPoolExecutor.submit(() -> c.dispatch(split, channel, msg));
@@ -79,10 +79,10 @@ public class CommandDispatcher extends ListenerAdapter {
 
     private String[] split(String content, Command c, String prefix) {
         content = content.substring(c.getName().length() + prefix.length());
-        if(content.startsWith(" ")){
+        if (content.startsWith(" ")) {
             content = content.substring(1);
         }
-        if(content.length() == 0){
+        if (content.length() == 0) {
             return new String[0];
         }
         return content.split("\\s");
