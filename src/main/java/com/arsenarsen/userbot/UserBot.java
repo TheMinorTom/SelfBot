@@ -91,7 +91,6 @@ public class UserBot extends ListenerAdapter {
         defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
         defaults.setProperty("id", "INSERT YOUR USER ID HERE");
         defaults.setProperty("prefix", "me.");
-        defaults.setProperty("template", "");
 
         defaults.store(new FileWriter(SETTINGS), "UserBot settings file");
     }
