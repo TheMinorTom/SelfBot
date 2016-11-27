@@ -1,5 +1,5 @@
 # SelfBot
-A small Java SelfBot
+A small Java SelfBot made with [JDA3](https://github.com/DV8FromTheWorld/JDA)
 # Dependicies
 On your system you will need [correctly installed Maven](http://maven.apache.org/install.html), [Git](https://git-scm.com/) and [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 # Installation
