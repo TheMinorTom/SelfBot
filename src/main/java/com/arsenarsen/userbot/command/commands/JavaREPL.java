@@ -48,8 +48,10 @@ public class JavaREPL implements Command {
 
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
-        if (ToolProvider.getSystemJavaCompiler() == null)
+        if (ToolProvider.getSystemJavaCompiler() == null) {
             msg.editMessage("You are missing JDK on your system! Halting..").queue();
+            return;
+        }
         if (args.length > 0) {
             String arg = msg.getRawContent().substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1).trim();
             long time = System.currentTimeMillis();
