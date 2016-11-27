@@ -25,7 +25,11 @@ public class Todo implements Command {
                     PreparedStatement st = connection.prepareStatement("INSERT INTO todo (task) VALUES (" +
                             "   ?" +
                             ")");
-                    st.setString(1, Arrays.stream(Arrays.copyOfRange(args, 1, args.length)).collect(Collectors.joining(" ")));
+                    final String[] task = {Arrays.stream(args).skip(1).collect(Collectors.joining(" "))};
+                    msg.getMentionedUsers().forEach(user -> task[0] = task[0].replace(user.getAsMention(), user.getName() + '#' + user.getDiscriminator()));
+                    msg.getMentionedRoles().forEach(role -> task[0] = task[0].replace(role.getAsMention(), role.getName()));
+                    msg.getMentionedChannels().forEach(textChannel -> task[0] = task[0].replace(textChannel.getAsMention(), textChannel.getName()));
+                    st.setString(1, task[0]);
                     st.executeUpdate();
                     msg.editMessage("Success!").queue();
                 });
