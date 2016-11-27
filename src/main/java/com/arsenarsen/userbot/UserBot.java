@@ -1,10 +1,12 @@
 package com.arsenarsen.userbot;
 
 import com.arsenarsen.userbot.command.CommandDispatcher;
+import com.arsenarsen.userbot.command.commands.AFK;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.slf4j.Logger;
@@ -57,9 +59,21 @@ public class UserBot extends ListenerAdapter {
         }
         token = getConfig().getProperty("token");
         try {
-            jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
-
-        } catch (RateLimitedException | LoginException e) {
+            jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildBlocking();
+            UserBot.getInstance().getJda().addEventListener(new ListenerAdapter() {
+                @Override
+                public void onMessageReceived(MessageReceivedEvent event) {
+                    if(!event.getMessage().getMentionedUsers().contains(UserBot.getInstance().getJda().getSelfUser()))
+                        return;
+                    if(event.getAuthor().equals(UserBot.getInstance().getJda().getSelfUser()) && !event.getMessage()
+                            .getRawContent().matches("<@!?\\d+> I am AFK!")){
+                        AFK.afk.set(false);
+                    } else if(AFK.afk.get()){
+                        event.getChannel().sendMessage(event.getAuthor().getAsMention() + " I am AFK!").queue();
+                    }
+                }
+            });
+        } catch (InterruptedException | RateLimitedException | LoginException e) {
             LOGGER.error("Could not log in!", e);
         }
     }

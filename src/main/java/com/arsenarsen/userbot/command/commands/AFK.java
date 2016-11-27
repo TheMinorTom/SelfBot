@@ -5,30 +5,12 @@ import com.arsenarsen.userbot.command.Command;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AFK implements Command {
-    public AtomicBoolean afk = new AtomicBoolean(false);
+    public static AtomicBoolean afk = new AtomicBoolean(false);
     private OnlineStatus status = OnlineStatus.ONLINE;
-
-    {
-        UserBot.getInstance().getJda().addEventListener(new ListenerAdapter() {
-            @Override
-            public void onMessageReceived(MessageReceivedEvent event) {
-                if(!event.getMessage().getMentionedUsers().contains(UserBot.getInstance().getJda().getSelfUser()))
-                    return;
-                if(event.getAuthor().equals(UserBot.getInstance().getJda().getSelfUser()) && !event.getMessage()
-                        .getRawContent().matches("<@!?\\d+> I am AFK!")){
-                    afk.set(false);
-                } else if(afk.get()){
-                    event.getChannel().sendMessage(event.getAuthor().getAsMention() + " I am AFK!").queue();
-                }
-            }
-        });
-    }
 
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
