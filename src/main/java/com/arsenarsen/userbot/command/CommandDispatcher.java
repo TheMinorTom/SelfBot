@@ -32,6 +32,7 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new Quote());
         registerCommand(new Update());
         registerCommand(new Todo());
+        registerCommand(new AFK());
         registerCommand(new Execute());
         registerCommand(new HelpCommand());
         registerCommand(new Reboot());
