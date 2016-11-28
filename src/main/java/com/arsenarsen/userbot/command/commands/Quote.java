@@ -15,25 +15,24 @@ public class Quote implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
         if (args.length >= 2) {
-            if (args[0].matches("[\\d]+")) {
+            if (args[0].matches("\\d+")) {
                 channel.getHistoryAround(args[0], 100).queue(messageHistory -> {
                     Message msg2 = messageHistory.getMessageById(args[0]);
                     if (msg2 != null) {
                         User auth = msg2.getAuthor();
                         String cnt = msg.getRawContent();
-                        msg.deleteMessage().queue();
                         cnt = cnt.substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1);
                         cnt = cnt.substring(args[0].length());
                         EmbedBuilder builder = new EmbedBuilder().setAuthor(auth.getName() + '#' + auth.getDiscriminator(), null, auth.getAvatarUrl())
                                 .setDescription(msg2.getRawContent())
-                                .setColor(new Color((int)(Math.random() * 0x1000000)))
+                                .setColor(new Color((int) (Math.random() * 0x1000000)))
                                 .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)
                                 .addField("Channel: ", "<#" + channel.getId() + ">", true);
                         int i = 0;
-                        for(Message.Attachment attachment : msg2.getAttachments()){
+                        for (Message.Attachment attachment : msg2.getAttachments()) {
                             builder.setImage(attachment.getUrl());
                         }
-                        channel.sendMessage(new MessageBuilder()
+                        msg.editMessage(new MessageBuilder()
                                 .setEmbed(builder.build())
                                 .appendString(cnt)
                                 .build()).queue();
