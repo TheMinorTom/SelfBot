@@ -13,7 +13,7 @@ public class HelpCommand implements Command {
         UserBot.getInstance().getDispatcher().getCommands().stream()
                 .sorted(String::compareTo)
                 .forEach(cmd -> help.append(cmd).append('\n'));
-        Messages.edit(msg, help.append("\n```").toString());
+        Messages.edit(msg, help.append("\n```").append("*Made by Arsen#3291* <https://github.com/ArsenArsen/SelfBot>").toString());
     }
 
     @Override
