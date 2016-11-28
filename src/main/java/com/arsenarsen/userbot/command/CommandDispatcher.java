@@ -61,11 +61,8 @@ public class CommandDispatcher extends ListenerAdapter {
         String content = msg.getRawContent().trim();
         String prefix = UserBot.getInstance().getConfig().getProperty("prefix");
         if (author.getId().equals(event.getJDA().getSelfUser().getId())
-                &&content.toLowerCase().startsWith(prefix.toLowerCase())){
-        MessageChannel channel = event.getChannel();
-        while (content.contains("  ")) {
-            content = content.replaceAll("\\s{2}", " ");
-        }
+                && content.toLowerCase().startsWith(prefix.toLowerCase())) {
+            MessageChannel channel = event.getChannel();
             for (Command c : commands.values()) {
                 if (content.toLowerCase().startsWith(prefix.toLowerCase() + c.getName() + ' ')
                         || content.equalsIgnoreCase(prefix + c.getName())) {
