@@ -1,6 +1,7 @@
-package com.arsenarsen.userbot.command;
+package com.arsenarsen.userbot.command.commands;
 
 import com.arsenarsen.userbot.UserBot;
+import com.arsenarsen.userbot.command.Command;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;

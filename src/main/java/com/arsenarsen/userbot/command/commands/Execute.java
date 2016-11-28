@@ -30,7 +30,7 @@ public class Execute implements Command {
             }
             if (p.isAlive()){
                 p.destroyForcibly();
-                Messages.edit(msg, "Timed out!");
+                Messages.edit(msg, "Timed out!\n```\n"+out+"```");
                 return;
             }
             Messages.edit(msg, "Evaluating...\n```\n" + out + "\n```Exit code: " + p.exitValue());
