@@ -68,7 +68,8 @@ public class UserBot extends ListenerAdapter {
                     if(event.getAuthor().equals(UserBot.getInstance().getJda().getSelfUser()) && !event.getMessage()
                             .getRawContent().matches("<@!?\\d+> I am AFK!")){
                         AFK.afk.set(false);
-                    } else if(AFK.afk.get()){
+                    } else if(AFK.afk.get() && !AFK.mentioned.contains(event.getAuthor().getId())){
+                        AFK.mentioned.add(event.getAuthor().getId());
                         event.getChannel().sendMessage(event.getAuthor().getAsMention() + " I am AFK!").queue();
                     }
                 }

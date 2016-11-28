@@ -37,6 +37,7 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new HelpCommand());
         registerCommand(new Reboot());
         registerCommand(new Embed());
+        registerCommand(new Purge());
     }
 
     public boolean registerCommand(Command command) {
