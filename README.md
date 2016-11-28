@@ -11,3 +11,5 @@ Take the part between the `"`s and put it into the settings file.
 After all of that is done, just run the bot again, and have fun :)
 
 # You can download the latest jar [here](https://ci.arsenarsen.com/job/SelfBot/)
+# Discord Guild
+[![](https://discordapp.com/api/guilds/208125579810045952/embed.png?style=banner4)](https://discord.gg/Vu8WNTw)
