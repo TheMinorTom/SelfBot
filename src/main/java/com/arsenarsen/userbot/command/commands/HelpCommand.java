@@ -9,7 +9,8 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 public class HelpCommand implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
-        StringBuilder help = new StringBuilder().append("Known commands: \n```fix\n");
+        StringBuilder help = new StringBuilder().append("***UserBot v").append(UserBot.VERSION)
+                .append("***\nKnown commands: \n```fix\n");
         UserBot.getInstance().getDispatcher().getCommands().stream()
                 .sorted(String::compareTo)
                 .forEach(cmd -> help.append(cmd).append('\n'));

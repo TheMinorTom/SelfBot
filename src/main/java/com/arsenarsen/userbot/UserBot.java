@@ -13,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -28,6 +25,18 @@ public class UserBot extends ListenerAdapter {
 
     /* CONSTANTS */
     public static final Logger LOGGER = LoggerFactory.getLogger(UserBot.class);
+    public static final String VERSION = getVersion(); // Inflated because java wont let me do otherwise /shrug
+
+    private static String getVersion() {
+        Properties p = new Properties();
+        try {
+            p.load(new InputStreamReader(UserBot.class.getClassLoader().getResourceAsStream("version.properties")));
+        } catch (Exception e) {
+            LOGGER.error("Could not load version!", e);
+        }
+        return p.getProperty("version", "RESOLUTION-FAILED");
+    }
+
     public static final File WORKING_DIR = new File("UserBot" + File.separator);
     public static final File SETTINGS = new File(WORKING_DIR, "settings.properties");
 
@@ -53,24 +62,25 @@ public class UserBot extends ListenerAdapter {
             SETTINGS.createNewFile();
             LOGGER.error("The config file has been created! Default values will be saved and the program will exit.");
             LOGGER.error("Please edit the config file to set your token.");
-            saveDefaultConfig();
             System.exit(1);
             return;
         }
+        saveDefaultConfig();
         token = getConfig().getProperty("token");
         try {
             jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
             jda.addEventListener(new ListenerAdapter() {
                 @Override
                 public void onMessageReceived(MessageReceivedEvent event) {
-                    if(!event.getMessage().getMentionedUsers().contains(UserBot.getInstance().getJda().getSelfUser()))
+                    if (!event.getMessage().getMentionedUsers().contains(UserBot.getInstance().getJda().getSelfUser()))
                         return;
-                    if(event.getAuthor().equals(UserBot.getInstance().getJda().getSelfUser()) && !event.getMessage()
-                            .getRawContent().matches("<@!?\\d+> I am AFK!")){
+                    if (event.getAuthor().equals(getJda().getSelfUser()) && !event.getMessage()
+                            .getRawContent().matches("<@!?\\d+> I am AFK!(?: Reason: .+)?")) {
                         AFK.afk.set(false);
-                    } else if(AFK.afk.get() && !AFK.mentioned.contains(event.getAuthor().getId())){
+                    } else if (AFK.afk.get() && !AFK.mentioned.contains(event.getAuthor().getId())) {
                         AFK.mentioned.add(event.getAuthor().getId());
-                        event.getChannel().sendMessage(event.getAuthor().getAsMention() + " I am AFK!").queue();
+                        event.getChannel().sendMessage(event.getAuthor().getAsMention() + " I am AFK!"
+                                + (AFK.afkReason == null ? "" : "\nReason: " + AFK.afkReason)).queue();
                     }
                 }
             });
@@ -103,8 +113,11 @@ public class UserBot extends ListenerAdapter {
     private void saveDefaultConfig() throws IOException {
         // This is gonna hurt..
         Properties defaults = new Properties();
-        defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
-        defaults.setProperty("prefix", "me.");
+        defaults.putAll(getConfig());
+        if (getConfig().getProperty("token") == null)
+            defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
+        if (getConfig().getProperty("prefix") == null)
+            defaults.setProperty("prefix", "me.");
 
         defaults.store(new FileWriter(SETTINGS), "UserBot settings file");
     }

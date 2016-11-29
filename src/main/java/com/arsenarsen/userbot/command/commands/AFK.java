@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AFK implements Command {
     public static AtomicBoolean afk = new AtomicBoolean(false);
     public static Set<String> mentioned = ConcurrentHashMap.newKeySet();
+    public static volatile String afkReason = null;
     private OnlineStatus status = OnlineStatus.ONLINE;
 
     @Override
@@ -20,11 +21,14 @@ public class AFK implements Command {
         if(!afk.get()){
             status = UserBot.getInstance().getJda().getPresence().getStatus();
             afk.set(true);
+            if(args.length > 0)
+                afkReason = msg.getRawContent().substring(1 + getName().length() + UserBot.getInstance().getConfig().getProperty("prefix").length());
             msg.editMessage("You're now AFK!").queue();
             UserBot.getInstance().getJda().getPresence().setStatus(OnlineStatus.IDLE);
         } else {
             UserBot.getInstance().getJda().getPresence().setStatus(status);
             afk.set(false);
+            afkReason = null;
             mentioned.clear();
             msg.editMessage("You're no longer AFK!").queue();
         }

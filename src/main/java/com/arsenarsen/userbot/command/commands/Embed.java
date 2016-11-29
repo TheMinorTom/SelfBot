@@ -7,16 +7,20 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
+import java.awt.*;
+
 public class Embed implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
-        msg.deleteMessage().queue();
         if(args.length == 0)
             return;
         String cnt = msg.getRawContent();
         cnt = cnt.substring(getName().length());
         cnt = cnt.substring(UserBot.getInstance().getConfig().getProperty("prefix").length());
-        channel.sendMessage(new MessageBuilder().setEmbed(new EmbedBuilder().setDescription(cnt).build()).build()).queue();
+        msg.editMessage(new MessageBuilder().setEmbed(new EmbedBuilder()
+                .setColor(new Color((int) (Math.random() * 0x1000000)))
+                .setAuthor(msg.getAuthor().getName() + '#' + msg.getAuthor().getDiscriminator(), null, msg.getAuthor().getAvatarUrl())
+                .setDescription(cnt).build()).build()).queue();
     }
 
     @Override
