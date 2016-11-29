@@ -15,7 +15,7 @@ public class HelpCommand implements Command {
                 .append("***\nKnown commands: \n```fix\n");
         UserBot.getInstance().getDispatcher().getCommands().stream()
                 .sorted((Comparator.comparing(Command::getName)))
-                .forEach(cmd -> help.append(cmd).append(" - ").append(cmd.getUsage()).append('\n'));
+                .forEach(cmd -> help.append(cmd.getName()).append(" - ").append(cmd.getUsage()).append('\n'));
         Messages.edit(msg, help.append("\n```").append("*Made by Arsen#3291* <https://github.com/ArsenArsen/SelfBot>").toString());
     }
 
