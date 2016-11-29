@@ -46,4 +46,9 @@ public class Quote implements Command {
     public String getName() {
         return "quote";
     }
+
+    @Override
+    public String getUsage() {
+        return "Quotes someones message. Usage: quote MESSAGE_ID Your comment; To get the message ID, enable developers mode and right click the message -> Copy ID.";
+    }
 }

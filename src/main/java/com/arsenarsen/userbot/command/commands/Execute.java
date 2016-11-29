@@ -44,4 +44,9 @@ public class Execute implements Command {
     public String getName() {
         return "exec";
     }
+
+    @Override
+    public String getUsage() {
+        return "Runs a command on your computer.";
+    }
 }

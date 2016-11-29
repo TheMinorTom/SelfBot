@@ -27,4 +27,9 @@ public class Embed implements Command {
     public String getName() {
         return "embed";
     }
+
+    @Override
+    public String getUsage() {
+        return "Makes a fancy embed instead of a normal message :o";
+    }
 }

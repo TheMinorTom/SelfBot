@@ -22,4 +22,9 @@ public class Flippin implements Command {
     public String getName() {
         return "flippin";
     }
+
+    @Override
+    public String getUsage() {
+        return "/tableflip";
+    }
 }

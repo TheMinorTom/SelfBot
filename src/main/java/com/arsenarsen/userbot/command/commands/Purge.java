@@ -20,4 +20,9 @@ public class Purge implements Command {
     public String getName() {
         return "purge";
     }
+
+    @Override
+    public String getUsage() {
+        return "Removes all your messages from the last X messages. Usage: purge X";
+    }
 }

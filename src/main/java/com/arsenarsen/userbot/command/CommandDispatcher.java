@@ -8,13 +8,9 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 /**
  * ayy commands
@@ -51,8 +47,8 @@ public class CommandDispatcher extends ListenerAdapter {
         return true;
     }
 
-    public List<String> getCommands() {
-        return commands.keySet().stream().collect(Collectors.toList());
+    public Collection<Command> getCommands() {
+        return commands.values();
     }
 
     @Override

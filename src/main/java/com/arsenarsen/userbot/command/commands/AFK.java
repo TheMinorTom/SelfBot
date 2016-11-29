@@ -38,4 +38,9 @@ public class AFK implements Command {
     public String getName() {
         return "afk";
     }
+
+    @Override
+    public String getUsage() {
+        return "Lets you AFK :O Usage: afk REASON; Reason is optional";
+    }
 }

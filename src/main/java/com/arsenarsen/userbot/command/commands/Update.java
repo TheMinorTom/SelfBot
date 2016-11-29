@@ -36,4 +36,9 @@ public class Update implements Command {
     public String getName() {
         return "update";
     }
+
+    @Override
+    public String getUsage() {
+        return "Updates the bot and exits. May not work on some platforms.";
+    }
 }

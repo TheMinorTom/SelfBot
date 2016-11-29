@@ -56,7 +56,7 @@ public class JavaREPL implements Command {
             String arg = msg.getRawContent().substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1).trim();
             long time = System.currentTimeMillis();
             ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
-            ExecutorService timer = Executors.newSingleThreadExecutor(new ManagedThreadFactory());
+            ExecutorService timer = Executors.newSingleThreadExecutor();
             try {
                 msg.editMessage("Compiling!...").queue();
                 File compileDir = new File(UserBot.WORKING_DIR, "compile");
@@ -114,11 +114,8 @@ public class JavaREPL implements Command {
         return "java";
     }
 
-    private static class ManagedThreadFactory implements ThreadFactory {
-
-        @Override
-        public Thread newThread(Runnable r) {
-            return new Thread(r);
-        }
+    @Override
+    public String getUsage() {
+        return "Gigantic thing to compile and run Java.";
     }
 }

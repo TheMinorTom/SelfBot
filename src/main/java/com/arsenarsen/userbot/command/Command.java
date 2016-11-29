@@ -13,4 +13,6 @@ public interface Command {
     void dispatch(String[] args, MessageChannel channel, Message msg);
 
     String getName();
+
+    String getUsage();
 }

@@ -73,4 +73,9 @@ public class Todo implements Command {
     public String getName() {
         return "todo";
     }
+
+    @Override
+    public String getUsage() {
+        return "Saves a TODO list for ya :o Usage: todo add TODO; just todo to list them; todo remove ID to remove a TODO";
+    }
 }
