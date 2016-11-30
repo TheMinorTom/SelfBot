@@ -2,21 +2,23 @@ package com.arsenarsen.userbot.command.commands;
 
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.Command;
-import com.arsenarsen.userbot.util.Messages;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
+import java.awt.*;
 import java.util.Comparator;
 
 public class HelpCommand implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
-        StringBuilder help = new StringBuilder().append("***UserBot v").append(UserBot.VERSION)
-                .append("***\nKnown commands: \n```fix\n");
-        UserBot.getInstance().getDispatcher().getCommands().stream()
-                .sorted((Comparator.comparing(Command::getName)))
-                .forEach(cmd -> help.append(cmd.getName()).append(" - ").append(cmd.getUsage()).append('\n'));
-        Messages.edit(msg, help.append("\n```").append("*Made by Arsen#3291* <https://github.com/ArsenArsen/SelfBot>").toString());
+        EmbedBuilder builder = new EmbedBuilder().setAuthor("UserBot v" + UserBot.VERSION, "https://github.com/ArsenArsen/SelfBot", null);
+        builder.setTitle("\tBy Arsen#3291");
+        builder.setColor(new Color((int) (0x1000000 * Math.random())));
+        UserBot.getInstance().getDispatcher().getCommands().stream().sorted(Comparator.comparing(Command::getName))
+                .forEach(command -> builder.addField(command.getName(), "```fix\n" + command.getUsage() + "```", true));
+        channel.sendMessage(new MessageBuilder().setEmbed(builder.build()).build()).queue();
     }
 
     @Override

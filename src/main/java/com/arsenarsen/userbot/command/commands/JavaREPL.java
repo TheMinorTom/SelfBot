@@ -48,9 +48,18 @@ public class JavaREPL implements Command {
 
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
+        String javaHome = System.getProperty("java.home");
         if (ToolProvider.getSystemJavaCompiler() == null) {
-            msg.editMessage("You are missing JDK on your system! Halting..").queue();
-            return;
+            System.setProperty("java.home", System.getenv("JDK_HOME"));
+            if (ToolProvider.getSystemJavaCompiler() == null) {
+                System.setProperty("java.home", System.getenv("JAVA_HOME"));
+                if (ToolProvider.getSystemJavaCompiler() == null) {
+                System.setProperty("java.home", javaHome);
+                    msg.editMessage("You are missing JDK on your system! Halting..\n\n" +
+                            "If you believe this is an error set JDK_HOME and JAVA_HOME enviromentals to point to it.").queue();
+                    return;
+                }
+            }
         }
         if (args.length > 0) {
             String arg = msg.getRawContent().substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1).trim();

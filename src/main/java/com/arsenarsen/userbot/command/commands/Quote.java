@@ -28,7 +28,6 @@ public class Quote implements Command {
                                 .setColor(new Color((int) (Math.random() * 0x1000000)))
                                 .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)
                                 .addField("Channel: ", "<#" + channel.getId() + ">", true);
-                        int i = 0;
                         for (Message.Attachment attachment : msg2.getAttachments()) {
                             builder.setImage(attachment.getUrl());
                         }
