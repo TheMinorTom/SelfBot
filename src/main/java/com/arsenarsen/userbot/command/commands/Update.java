@@ -6,7 +6,9 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -24,7 +26,14 @@ public class Update implements Command {
             URL url = new URL("https://ci.arsenarsen.com/job/SelfBot/lastSuccessfulBuild/artifact/target/UserBot-jar-with-dependencies.jar");
             URLConnection httpcon = url.openConnection();
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
-            Files.copy(httpcon.getInputStream(), current.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            byte[] buff = new byte[1024];
+            FileOutputStream output = new FileOutputStream(current);
+            InputStream stream = httpcon.getInputStream();
+            while(stream.read(buff) != -1)
+                output.write(buff);
+            output.flush();
+            output.close();
+//            Files.copy(httpcon.getInputStream(), current.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Messages.edit(msg, "Aight! Rebooting!");
             System.exit(0);
         } catch (IOException e) {

@@ -101,7 +101,10 @@ public class UserBot extends ListenerAdapter {
 
     public void saveConfig() {
         try {
-            getConfig().store(new FileWriter(SETTINGS), "UserBot settings file");
+            Writer writer = new FileWriter(SETTINGS);
+            getConfig().store(writer, "UserBot settings file");
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,8 +118,10 @@ public class UserBot extends ListenerAdapter {
             defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
         if (getConfig().getProperty("prefix") == null)
             defaults.setProperty("prefix", "me.");
-
-        defaults.store(new FileWriter(SETTINGS), "UserBot settings file");
+        Writer writer = new FileWriter(SETTINGS);
+        defaults.store(writer, "UserBot settings file");
+        writer.flush();
+        writer.close();
     }
 
     public JDA getJda() {
