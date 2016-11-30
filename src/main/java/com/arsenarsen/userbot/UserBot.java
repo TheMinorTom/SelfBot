@@ -62,10 +62,10 @@ public class UserBot extends ListenerAdapter {
             SETTINGS.createNewFile();
             LOGGER.error("The config file has been created! Default values will be saved and the program will exit.");
             LOGGER.error("Please edit the config file to set your token.");
+            saveDefaultConfig();
             System.exit(1);
             return;
         }
-        saveDefaultConfig();
         token = getConfig().getProperty("token");
         try {
             jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
@@ -114,10 +114,8 @@ public class UserBot extends ListenerAdapter {
         // This is gonna hurt..
         Properties defaults = new Properties();
         defaults.putAll(getConfig());
-        if (getConfig().getProperty("token") == null)
-            defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
-        if (getConfig().getProperty("prefix") == null)
-            defaults.setProperty("prefix", "me.");
+        defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
+        defaults.setProperty("prefix", "me.");
         Writer writer = new FileWriter(SETTINGS);
         defaults.store(writer, "UserBot settings file");
         writer.flush();
