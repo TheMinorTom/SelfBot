@@ -36,7 +36,7 @@ public class Update implements Command {
             output.close();
             stream.close();
 //            Files.copy(httpcon.getInputStream(), current.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Messages.edit(msg, "Aight! Rebooting!");
+            Messages.edit(msg, "Aight! Exiting!");
             System.exit(0);
         } catch (IOException e) {
             Messages.updateWithException("Failed to update!", e, msg);

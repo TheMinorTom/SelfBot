@@ -18,7 +18,7 @@ public class HelpCommand implements Command {
         builder.setColor(new Color((int) (0x1000000 * Math.random())));
         UserBot.getInstance().getDispatcher().getCommands().stream().sorted(Comparator.comparing(Command::getName))
                 .forEach(command -> builder.addField(command.getName(), "```fix\n" + command.getUsage() + "```", true));
-        channel.sendMessage(new MessageBuilder().setEmbed(builder.build()).build()).queue();
+        msg.editMessage(new MessageBuilder().setEmbed(builder.build()).build()).queue();
     }
 
     @Override
