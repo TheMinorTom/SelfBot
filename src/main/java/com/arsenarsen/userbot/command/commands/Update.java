@@ -26,13 +26,15 @@ public class Update implements Command {
             URL url = new URL("https://ci.arsenarsen.com/job/SelfBot/lastSuccessfulBuild/artifact/target/UserBot-jar-with-dependencies.jar");
             URLConnection httpcon = url.openConnection();
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
-            byte[] buff = new byte[1024];
+            byte[] buff = new byte[2048];
             FileOutputStream output = new FileOutputStream(current);
             InputStream stream = httpcon.getInputStream();
-            while(stream.read(buff) != -1)
-                output.write(buff);
+            int len;
+            while((len = stream.read(buff)) != -1)
+                output.write(buff, 0, len);
             output.flush();
             output.close();
+            stream.close();
 //            Files.copy(httpcon.getInputStream(), current.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Messages.edit(msg, "Aight! Rebooting!");
             System.exit(0);
