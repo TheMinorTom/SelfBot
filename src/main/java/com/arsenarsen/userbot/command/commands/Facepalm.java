@@ -4,20 +4,20 @@ import com.arsenarsen.userbot.command.Command;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
-public class Exit implements Command {
+public class Facepalm implements Command {
+
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
-        msg.editMessage("Bye!").queue();
-        System.exit(1);
+        msg.editMessage("*facepalm*").queue();
     }
 
     @Override
     public String getName() {
-        return "exit";
+        return "facepalm";
     }
 
     @Override
     public String getUsage() {
-        return "Exits the bot";
+        return "When someone fails, you need to facepalm.";
     }
 }
