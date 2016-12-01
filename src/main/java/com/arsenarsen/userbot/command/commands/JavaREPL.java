@@ -48,20 +48,19 @@ public class JavaREPL implements Command {
 
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
-        String javaHome = System.getProperty("java.home");
-        if (ToolProvider.getSystemJavaCompiler() == null) {
-            System.setProperty("java.home", System.getenv("JDK_HOME"));
+        if (args.length > 0) {
+            String javaHome = System.getProperty("java.home");
             if (ToolProvider.getSystemJavaCompiler() == null) {
-                System.setProperty("java.home", System.getenv("JAVA_HOME"));
+                System.setProperty("java.home", System.getenv("JDK_HOME"));
                 if (ToolProvider.getSystemJavaCompiler() == null) {
-                System.setProperty("java.home", javaHome);
-                    msg.editMessage("You are missing JDK on your system! Halting..\n\n" +
-                            "If you believe this is an error set JDK_HOME and JAVA_HOME enviromentals to point to it.").queue();
-                    return;
+                    System.setProperty("java.home", System.getenv("JAVA_HOME"));
+                    if (ToolProvider.getSystemJavaCompiler() == null) {
+                        msg.editMessage("You are missing JDK on your system! Halting..\n\n" +
+                                "If you believe this is an error set JDK_HOME and JAVA_HOME enviromentals to point to it.").queue();
+                        return;
+                    }
                 }
             }
-        }
-        if (args.length > 0) {
             String arg = msg.getRawContent().substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1).trim();
             long time = System.currentTimeMillis();
             ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
@@ -77,13 +76,16 @@ public class JavaREPL implements Command {
                 classFile.getParentFile().mkdirs();
                 classFile.createNewFile();
                 Class<?> compiled = compile(arg, time, errorStream, classFile, classStorage);
+                System.setProperty("java.home", javaHome);
                 Runnable task = () -> {
                     try {
                         Method method = compiled.getDeclaredMethod("execute", MessageChannel.class);
                         msg.editMessage("Input: ```java\n" + arg + "\n```\n"
                                 + "Output: " + method.invoke(null, channel)).queue();
-                    } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    } catch (IllegalAccessException | NoSuchMethodException e) {
                         Messages.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Could not execute!\n", e, msg);
+                    } catch (InvocationTargetException e) {
+                        Messages.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Could not execute!\n", e.getCause(), msg);
                     }
                 };
                 Future future = timer.submit(task);

@@ -18,8 +18,6 @@ import java.util.Properties;
 
 /**
  * ayy its mai bot
- * <br>
- * Created by Arsen on 21.9.16..
  */
 public class UserBot extends ListenerAdapter {
 
@@ -132,11 +130,13 @@ public class UserBot extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        LOGGER.info("Booted!");
+        LOGGER.info("Booted UserBot {}!", VERSION);
     }
 
     /* STATICS */
     public static void main(String... args) throws IOException {
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> LOGGER.error("Uncaught error in " + t, e));
+        Thread.currentThread().setUncaughtExceptionHandler((t, e) -> LOGGER.error("Uncaught error in " + t, e));
         instance = new UserBot(args);
     }
 
