@@ -3,6 +3,7 @@ package com.arsenarsen.userbot;
 import com.arsenarsen.userbot.command.CommandDispatcher;
 import com.arsenarsen.userbot.command.commands.AFK;
 import com.arsenarsen.userbot.websocket.UserBotWebSocketServer;
+import com.google.gson.Gson;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -26,6 +27,7 @@ public class UserBot extends ListenerAdapter {
     /* CONSTANTS */
     public static final Logger LOGGER = LoggerFactory.getLogger(UserBot.class);
     public static final String VERSION = getVersion(); // Inflated because java wont let me do otherwise /shrug
+    public static final Gson GSON = new Gson();
 
     private static String getVersion() {
         Properties p = new Properties();

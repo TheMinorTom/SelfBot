@@ -34,6 +34,7 @@ public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketS
 
     public UserBotWebSocketServer(int port , Draft d ) throws UnknownHostException {
         super( new InetSocketAddress( port ), Collections.singletonList( d ) );
+        UserBotWebSocket.register();
     }
 
     @Override
@@ -53,12 +54,16 @@ public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketS
 
     @Override
     public void onMessage( WebSocket conn, String message ) {
-        conn.send( message );
+        try {
+            conn.send(UserBot.GSON.toJson(UserBotWebSocket.handleEvent(UserBot.GSON.fromJson(message, WebSocketMessage.class))));
+        }catch (Throwable e){
+            UserBot.LOGGER.error("WebSocket Message Receive error", e);
+        }
     }
 
     @Override
     public void onMessage( WebSocket conn, ByteBuffer blob ) {
-        conn.send("Whats an ByteBuffer?");
+        // What are ByteBuffers?
     }
 
     @Override

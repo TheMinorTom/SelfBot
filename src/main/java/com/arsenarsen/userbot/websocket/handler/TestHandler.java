@@ -1,4 +1,7 @@
-package com.arsenarsen.userbot.websocket;
+package com.arsenarsen.userbot.websocket.handler;
+
+import com.arsenarsen.userbot.websocket.WebSocketMessage;
+import com.arsenarsen.userbot.websocket.WebSocketMessageHandler;
 
 /*
  *  UserBot Copyright (C) 2016 MinorTom
@@ -16,18 +19,18 @@ package com.arsenarsen.userbot.websocket;
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class WebSocketMessage {
-    public WebSocketMessage(){
-
+public class TestHandler implements WebSocketMessageHandler{
+    @Override
+    public WebSocketMessage dispatch(WebSocketMessage msg) {
+        WebSocketMessage retur = new WebSocketMessage();
+        retur.action = "MESSAGE_RETURN";
+        retur.error = "OK";
+        retur.message = "Hi";
+        return retur;
     }
 
-    // JSON for Testing: {"handler":"","action":"","error":"","message":""}
-
-    public String handler = "";
-
-    public String action = "";
-
-    public String error = "";
-
-    public String message = "";
+    @Override
+    public String getName() {
+        return "Test";
+    }
 }

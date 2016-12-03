@@ -16,18 +16,7 @@ package com.arsenarsen.userbot.websocket;
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class WebSocketMessage {
-    public WebSocketMessage(){
 
-    }
+public class UnknownWebSocketMessageException extends Exception{
 
-    // JSON for Testing: {"handler":"","action":"","error":"","message":""}
-
-    public String handler = "";
-
-    public String action = "";
-
-    public String error = "";
-
-    public String message = "";
 }
