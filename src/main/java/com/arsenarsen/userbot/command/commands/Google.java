@@ -61,7 +61,7 @@ public class Google implements Command {
 
     @Override
     public String getName() {
-        return "googel";
+        return "google";
     }
 
     @Override
