@@ -2,13 +2,17 @@ package com.arsenarsen.userbot.command;
 
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.commands.*;
+import com.arsenarsen.userbot.util.Messages;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,6 +40,7 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new Purge());
         registerCommand(new Facepalm());
         registerCommand(new Sigh());
+        registerCommand(new Google());
     }
 
     public boolean registerCommand(Command command) {
@@ -67,7 +72,13 @@ public class CommandDispatcher extends ListenerAdapter {
                         || content.equalsIgnoreCase(prefix + c.getName())) {
                     String[] split = split(content, c, prefix);
                     UserBot.LOGGER.info("Dispatching command '" + c.getName().toLowerCase() + "' with split: " + Arrays.toString(split));
-                    threadPoolExecutor.submit(() -> c.dispatch(split, channel, msg));
+                    threadPoolExecutor.submit(() -> {
+                        try{
+                            c.dispatch(split, channel, msg);
+                        } catch (Exception e){
+                            Messages.updateWithException("There was an error processing this command!", e, msg);
+                        }
+                    });
                     break;
                 }
             }

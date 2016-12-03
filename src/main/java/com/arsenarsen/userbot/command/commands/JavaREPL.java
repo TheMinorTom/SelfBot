@@ -2,7 +2,7 @@ package com.arsenarsen.userbot.command.commands;
 
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.Command;
-import com.arsenarsen.userbot.util.FileUtils;
+import com.arsenarsen.userbot.util.IOUtils;
 import com.arsenarsen.userbot.util.Messages;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -75,8 +75,7 @@ public class JavaREPL implements Command {
                 classStorage.mkdirs();
                 classFile.getParentFile().mkdirs();
                 classFile.createNewFile();
-                Class<?> compiled = compile(arg, time, errorStream, classFile, classStorage);
-                System.setProperty("java.home", javaHome);
+                Class<?> compiled = compile(arg, time, errorStream, classFile, classStorage, javaHome);
                 Runnable task = () -> {
                     try {
                         Method method = compiled.getDeclaredMethod("execute", MessageChannel.class);
@@ -93,8 +92,8 @@ public class JavaREPL implements Command {
                 future.get(15, TimeUnit.SECONDS);
                 if (!timer.isTerminated())
                     timer.shutdownNow();
-                FileUtils.delete(classStorage);
-                FileUtils.delete(classFile.getParentFile());
+                IOUtils.delete(classStorage);
+                IOUtils.delete(classFile.getParentFile());
             } catch (IOException e) {
                 Messages.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Compilation failure!", e, msg);
             } catch (ClassNotFoundException ignored) {
@@ -104,11 +103,12 @@ public class JavaREPL implements Command {
                 if (!timer.isTerminated())
                     timer.shutdownNow();
             }
-        } else msg.editMessage("Insert a short Java program to evaluate");
+            System.setProperty("java.home", javaHome);
+        } else msg.editMessage("Insert a short Java program to evaluate").queue();
 
     }
 
-    private Class<?> compile(String trim, long time, OutputStream compilerStream, File classFile, File classStorage) throws IOException, ClassNotFoundException {
+    private Class<?> compile(String trim, long time, OutputStream compilerStream, File classFile, File classStorage, String javaHome) throws IOException, ClassNotFoundException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(classFile));
         writer.write("package pkg" + time + ";"
                 + System.getProperty("line.separator") + part1 + trim + System.getProperty("line.separator") + part2);
@@ -116,6 +116,7 @@ public class JavaREPL implements Command {
         writer.close();
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         compiler.run(null, compilerStream, compilerStream, classFile.getAbsolutePath(), "-d", classStorage.getAbsolutePath());
+        System.setProperty("java.home", javaHome);
         URLClassLoader loader = new URLClassLoader(new URL[]{classStorage.toURI().toURL()}, getClass().getClassLoader());
         return loader.loadClass("pkg" + time + ".Pattern");
     }
