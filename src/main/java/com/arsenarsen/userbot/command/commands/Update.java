@@ -22,7 +22,7 @@ public class Update implements Command {
         try {
             File current = new File(URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8")); // pfft this will go well..
             Files.copy(current.toPath(), Paths.get(current.getPath().replace(".jar", ".backup.jar")), StandardCopyOption.REPLACE_EXISTING);
-            URL url = new URL("https://ci.arsenarsen.com/job/SelfBot/lastSuccessfulBuild/artifact/target/UserBot-jar-with-dependencies.jar");
+            URL url = new URL(UserBot.getInstance().getConfig().getProperty("downloadpath", "https://ci.arsenarsen.com/job/SelfBot/lastSuccessfulBuild/artifact/target/UserBot-jar-with-dependencies.jar"));
             URLConnection httpcon = url.openConnection();
             httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
             try (FileOutputStream output = new FileOutputStream(current);
