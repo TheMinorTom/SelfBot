@@ -50,13 +50,13 @@ public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketS
 
     @Override
     public void onMessage( WebSocket conn, ByteBuffer blob ) {
-        // What are ByteBuffers?
+        onMessage(conn, new String(blob.array()));
     }
 
     @Override
     public void onWebsocketMessageFragment( WebSocket conn, Framedata frame ) {
         FrameBuilder builder = (FrameBuilder) frame;
         builder.setTransferemasked( false );
-        conn.sendFrame( frame );
+        // But what does this mean?
     }
 }
