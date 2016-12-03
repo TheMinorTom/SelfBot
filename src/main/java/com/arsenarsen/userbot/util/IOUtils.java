@@ -25,11 +25,11 @@ public class IOUtils {
 
     public static Map<String, String> parse(String url) throws UnsupportedEncodingException {
         HashMap<String, String> ret = new HashMap<>();
-        if(!url.contains("&"))
+        if(!url.contains("?"))
             return ret;
-        url = url.substring(0, url.indexOf('?'));
+        url = url.substring(url.indexOf('?'));
         for(String s : url.split("&")){
-            String[] params = s.split("=", 2);
+            String[] params = s.split("=");
             ret.put(params[0], URLDecoder.decode(params[1], "UTF-8"));
         }
         return ret;
