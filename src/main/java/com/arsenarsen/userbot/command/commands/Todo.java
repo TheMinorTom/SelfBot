@@ -20,14 +20,22 @@ public class Todo implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
         try {
-            if (args.length >= 2 && args[0].equalsIgnoreCase("add")) {
+            if (args.length == 1) {
+                if(args[0].equalsIgnoreCase("clear")){
+                    SQL.executeSQL(connection -> {
+                        connection.createStatement().execute("DELETE FROM todo");
+                        msg.editMessage("Cleared!").queue();
+                    });
+                    return;
+                }
+            } else if (args.length >= 2 && args[0].equalsIgnoreCase("add")) {
                 SQL.executeSQL(connection -> {
                     PreparedStatement st = connection.prepareStatement("INSERT INTO todo (task) VALUES (" +
                             "   ?" +
                             ")");
                     final String[] task = {Arrays.stream(args).skip(1).collect(Collectors.joining(" "))};
                     msg.getMentionedUsers().forEach(user -> task[0] = task[0].replace(user.getAsMention(), user.getName() + '#' + user.getDiscriminator()));
-                    msg.getMentionedUsers().forEach(user -> task[0] = task[0].replace("<@!"+user.getId()+">", user.getName() + '#' + user.getDiscriminator()));
+                    msg.getMentionedUsers().forEach(user -> task[0] = task[0].replace("<@!" + user.getId() + ">", user.getName() + '#' + user.getDiscriminator()));
                     msg.getMentionedRoles().forEach(role -> task[0] = task[0].replace(role.getAsMention(), role.getName()));
                     msg.getMentionedChannels().forEach(textChannel -> task[0] = task[0].replace(textChannel.getAsMention(), textChannel.getName()));
                     st.setString(1, task[0]);
