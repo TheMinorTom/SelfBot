@@ -63,13 +63,11 @@ public class UserBot extends ListenerAdapter {
         if (!SETTINGS.exists()) {
             SETTINGS.createNewFile();
             LOGGER.error("The config file has been created! Default values will be saved and the program will exit.");
-            LOGGER.error("Please edit the config file to set your token (if you didnt do that as an Argument)");
+            LOGGER.error("Please edit the config file to set your token");
             saveDefaultConfig();
             System.exit(1);
             return;
         }
-        if(args.length >= 1)
-            getConfig().setProperty("token", args[0]);
         token = getConfig().getProperty("token");
         try {
             jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
@@ -88,10 +86,11 @@ public class UserBot extends ListenerAdapter {
         } catch (RateLimitedException | LoginException e) {
             LOGGER.error("Could not log in!", e);
         }
+        if(args.length == 1 && args[0].matches("[\\d]+"))
         try {
-            UserBotWebSocketServer.instance = new UserBotWebSocketServer(9123, new Draft_17());
+            UserBotWebSocketServer.instance = new UserBotWebSocketServer(Integer.parseInt(args[0]), new Draft_17());
             UserBotWebSocketServer.instance.start();
-        }catch (Throwable t){
+        }catch (Exception t){
             LOGGER.error("Error starting websocket", t);
         }
     }
@@ -127,6 +126,7 @@ public class UserBot extends ListenerAdapter {
         defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
         defaults.setProperty("prefix", "me.");
         defaults.setProperty("downloadpath", "https://ci.arsenarsen.com/job/SelfBot/lastSuccessfulBuild/artifact/target/UserBot-jar-with-dependencies.jar");
+        // Walsh its no longer hard coded :(
         Writer writer = new FileWriter(SETTINGS);
         defaults.store(writer, "UserBot settings file");
         writer.flush();

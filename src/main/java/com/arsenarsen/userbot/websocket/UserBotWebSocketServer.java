@@ -16,47 +16,47 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 
-public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketServer{
+public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketServer {
     public static UserBotWebSocketServer instance;
 
-    public UserBotWebSocketServer(int port , Draft d ) throws UnknownHostException {
-        super( new InetSocketAddress( port ), Collections.singletonList( d ) );
+    public UserBotWebSocketServer(int port, Draft d) throws UnknownHostException {
+        super(new InetSocketAddress(port), Collections.singletonList(d));
         UserBotWebSocket.register();
     }
 
     @Override
-    public void onOpen( WebSocket conn, ClientHandshake handshake ) {
+    public void onOpen(WebSocket conn, ClientHandshake handshake) {
         UserBot.LOGGER.info("WebSocket Connection opened");
     }
 
     @Override
-    public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
+    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         UserBot.LOGGER.info("WebSocket Connection closed");
     }
 
     @Override
-    public void onError( WebSocket conn, Exception ex ) {
+    public void onError(WebSocket conn, Exception ex) {
         UserBot.LOGGER.error("WebSocket error occured", ex);
     }
 
     @Override
-    public void onMessage( WebSocket conn, String message ) {
+    public void onMessage(WebSocket conn, String message) {
         try {
             conn.send(UserBot.GSON.toJson(UserBotWebSocket.handleEvent(UserBot.GSON.fromJson(message, WebSocketMessage.class))));
-        }catch (Throwable e){
+        } catch (Throwable e) {
             UserBot.LOGGER.error("WebSocket Message Receive error", e);
         }
     }
 
     @Override
-    public void onMessage( WebSocket conn, ByteBuffer blob ) {
+    public void onMessage(WebSocket conn, ByteBuffer blob) {
         onMessage(conn, new String(blob.array()));
     }
 
     @Override
-    public void onWebsocketMessageFragment( WebSocket conn, Framedata frame ) {
+    public void onWebsocketMessageFragment(WebSocket conn, Framedata frame) {
         FrameBuilder builder = (FrameBuilder) frame;
-        builder.setTransferemasked( false );
+        builder.setTransferemasked(false);
         // But what does this mean?
     }
 }

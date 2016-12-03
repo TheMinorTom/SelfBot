@@ -18,12 +18,12 @@ public class AFK implements Command {
 
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
-        if(!afk.get()){
+        if (!afk.get()) {
             status = UserBot.getInstance().getJda().getPresence().getStatus();
             afk.set(true);
-            if(args.length > 0)
+            if (args.length > 0)
                 afkReason = msg.getRawContent().substring(1 + getName().length() + UserBot.getInstance().getConfig().getProperty("prefix").length());
-            msg.editMessage("You're now AFK!").queue();
+            msg.editMessage("You're now AFK!" + (afkReason != null ? " (" + afkReason + ")" : "")).queue();
             UserBot.getInstance().getJda().getPresence().setStatus(OnlineStatus.IDLE);
         } else {
             UserBot.getInstance().getJda().getPresence().setStatus(status);

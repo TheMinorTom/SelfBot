@@ -36,6 +36,7 @@ public class Google implements Command {
                     try {
                         title = res.select(".r").first().text();
                         url = res.select(".r").first().children().first().attr("abs:href");
+                        url = IOUtils.parse(url).get("q");
                         body = res.getElementsByClass("st").first().text();
                         break;
                     } catch (NullPointerException ignored) {

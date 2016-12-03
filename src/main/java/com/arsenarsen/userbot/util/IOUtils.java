@@ -27,10 +27,11 @@ public class IOUtils {
         HashMap<String, String> ret = new HashMap<>();
         if(!url.contains("?"))
             return ret;
-        url = url.substring(url.indexOf('?'));
-        for(String s : url.split("&")){
-            String[] params = s.split("=");
-            ret.put(params[0], URLDecoder.decode(params[1], "UTF-8"));
+        url = url.substring(url.indexOf('?') + 1);
+        String[] params = url.split("&");
+        for(String s : params){
+            String[] pair = s.split("=", 2);
+            ret.put(pair[0], URLDecoder.decode(pair[1], "UTF-8"));
         }
         return ret;
     }
