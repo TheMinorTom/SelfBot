@@ -63,7 +63,7 @@ public class CommandDispatcher extends ListenerAdapter {
         User author = event.getAuthor();
         Message msg = event.getMessage();
         String content = msg.getRawContent().trim();
-        String prefix = UserBot.getInstance().getConfig().getProperty("prefix");
+        String prefix = UserBot.getInstance().getConfig().getProperty("prefix", "me.");
         if (author.getId().equals(event.getJDA().getSelfUser().getId())
                 && content.toLowerCase().startsWith(prefix.toLowerCase())) {
             MessageChannel channel = event.getChannel();

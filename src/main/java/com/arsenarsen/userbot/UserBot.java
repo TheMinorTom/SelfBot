@@ -2,6 +2,8 @@ package com.arsenarsen.userbot;
 
 import com.arsenarsen.userbot.command.CommandDispatcher;
 import com.arsenarsen.userbot.command.commands.AFK;
+import com.arsenarsen.userbot.websocket.UserBotWebSocketServer;
+import com.google.gson.Gson;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -9,6 +11,7 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.java_websocket.drafts.Draft_17;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +27,7 @@ public class UserBot extends ListenerAdapter {
     /* CONSTANTS */
     public static final Logger LOGGER = LoggerFactory.getLogger(UserBot.class);
     public static final String VERSION = getVersion(); // Inflated because java wont let me do otherwise /shrug
+    public static final Gson GSON = new Gson();
 
     private static String getVersion() {
         Properties p = new Properties();
@@ -59,11 +63,13 @@ public class UserBot extends ListenerAdapter {
         if (!SETTINGS.exists()) {
             SETTINGS.createNewFile();
             LOGGER.error("The config file has been created! Default values will be saved and the program will exit.");
-            LOGGER.error("Please edit the config file to set your token.");
+            LOGGER.error("Please edit the config file to set your token (if you didnt do that as an Argument)");
             saveDefaultConfig();
             System.exit(1);
             return;
         }
+        if(args.length >= 1)
+            getConfig().setProperty("token", args[0]);
         token = getConfig().getProperty("token");
         try {
             jda = new JDABuilder(AccountType.CLIENT).addListener(this, (dispatcher = new CommandDispatcher())).setToken(token).buildAsync();
@@ -81,6 +87,12 @@ public class UserBot extends ListenerAdapter {
             });
         } catch (RateLimitedException | LoginException e) {
             LOGGER.error("Could not log in!", e);
+        }
+        try {
+            UserBotWebSocketServer.instance = new UserBotWebSocketServer(9123, new Draft_17());
+            UserBotWebSocketServer.instance.start();
+        }catch (Throwable t){
+            LOGGER.error("Error starting websocket", t);
         }
     }
 
@@ -114,6 +126,7 @@ public class UserBot extends ListenerAdapter {
         defaults.putAll(getConfig());
         defaults.setProperty("token", "INSERT YOUR TOKEN HERE");
         defaults.setProperty("prefix", "me.");
+        defaults.setProperty("downloadpath", "https://ci.arsenarsen.com/job/SelfBot/lastSuccessfulBuild/artifact/target/UserBot-jar-with-dependencies.jar");
         Writer writer = new FileWriter(SETTINGS);
         defaults.store(writer, "UserBot settings file");
         writer.flush();
