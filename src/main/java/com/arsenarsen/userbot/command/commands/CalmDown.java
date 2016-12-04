@@ -6,13 +6,13 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CalmDown implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
         try {
-            if(new Random().nextBoolean()) {
+            if(ThreadLocalRandom.current().nextBoolean()) {
                 String calmnessSource =
                         Jsoup.connect("http://random.cat/").get().body().select("#cat").first().attr("abs:src");
                 msg.editMessage("*Calm...*\n" + calmnessSource).queue();
