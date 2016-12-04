@@ -1,6 +1,6 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="com.arsenarsen.userbot.logging.Filter" />
+        <filter class="com.arsenarsen.userbot.logging.LogFilter" />
         <encoder>
             <pattern>[%d{yyyy.MM.dd HH:mm} %c{0} %t %-5level] %msg%n</pattern>
         </encoder>

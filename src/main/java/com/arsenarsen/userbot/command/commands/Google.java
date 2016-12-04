@@ -27,7 +27,7 @@ public class Google implements Command {
             try {
                 Document doc = Jsoup.
                         connect("https://www.google.com/search?q=" + URLEncoder.encode(query, "UTF-8"))
-                        .userAgent("Mozilla/5.0").get();
+                        .userAgent("Mozilla/5.0 " + System.currentTimeMillis()).get();
                 Elements ress = doc.getElementsByClass("g");
                 String title = null;
                 String url = null;
@@ -62,7 +62,7 @@ public class Google implements Command {
 
     @Override
     public String getName() {
-        return "google";
+        return "googl";
     }
 
     @Override

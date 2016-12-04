@@ -40,7 +40,7 @@ public class IOUtils {
     public static String getIcon(String url) throws URISyntaxException, IOException {
         String meta;
         try {
-            Document doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 " + System.currentTimeMillis()).get();
             meta = doc.head().select("link[href~=.*\\.ico]").first().attr("abs:href");
         } catch (NullPointerException ignored){
             String uri = new URI(url).getHost();
