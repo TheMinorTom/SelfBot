@@ -6,14 +6,22 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class CalmDown implements Command {
     @Override
     public void dispatch(String[] args, MessageChannel channel, Message msg) {
         try {
-            String calmnessSource =
-                    Jsoup.connect("http://random.cat/").get().body().select("#cat").first().attr("abs:src");
-            msg.editMessage("*Calm...*\n" + calmnessSource).queue();
+            if(new Random().nextBoolean()) {
+                String calmnessSource =
+                        Jsoup.connect("http://random.cat/").get().body().select("#cat").first().attr("abs:src");
+                msg.editMessage("*Calm...*\n" + calmnessSource).queue();
+            } else {
+                String calmnessSource =
+                        Jsoup.connect("http://random.dog/").get().body().select("body > p:nth-child(2) > img")
+                                .first().attr("abs:src");
+                msg.editMessage("*Calm...*\n" + calmnessSource).queue();
+            }
         } catch (IOException e) {
             msg.editMessage("You cannot be calmed D:").queue();
         }
