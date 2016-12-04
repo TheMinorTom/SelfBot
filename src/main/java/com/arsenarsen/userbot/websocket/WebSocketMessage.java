@@ -29,8 +29,32 @@ public class WebSocketMessage {
         return UserBot.GSON.toJson(this);
     }
 
+    public String getHandler() {
+        return handler;
+    }
+
+    public Action getAction() {
+        return Action.get(action);
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     public enum Action {
         RESPONSE,
-        NOTIFY, REQUEST
+        NOTIFY, REQUEST;
+
+        public static Action get(String action) {
+            try {
+                return valueOf(action.toUpperCase());
+            } catch (Exception e) {
+                return null;
+            }
+        }
     }
 }

@@ -15,8 +15,8 @@ public class UserBotWebSocket {
 
     public WebSocketMessage handleEvent(WebSocketMessage msg) {
         for (WebSocketMessageHandler h : handlers.values()) {
-            if (h.getName().equalsIgnoreCase(msg.handler)) {
-                UserBot.LOGGER.info("Dispatching webhook with handler " + msg.handler);
+            if (h.getName().equalsIgnoreCase(msg.getHandler())) {
+                UserBot.LOGGER.info("Dispatching webhook with handler " + msg.getHandler());
                 try {
                     return h.dispatch(msg);
                 } catch (Exception e) {
@@ -25,7 +25,7 @@ public class UserBotWebSocket {
                 break;
             }
         }
-        UserBot.LOGGER.error("Unknown WebSocket message received: " + msg.handler);
+        UserBot.LOGGER.error("Unknown WebSocket message received: " + msg.getHandler());
         JsonArray avail = new JsonArray();
         handlers.keySet().forEach(avail::add);
         return new WebSocketMessage("{\"available\": " + avail + "}", "UNKNOWN_HANDLER", WebSocketMessage.Action.RESPONSE, null);
