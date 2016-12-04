@@ -62,7 +62,7 @@ public class Google implements Command {
 
     @Override
     public String getName() {
-        return "googl";
+        return "google";
     }
 
     @Override
