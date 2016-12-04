@@ -9,11 +9,7 @@ import com.arsenarsen.userbot.websocket.WebSocketMessageHandler;
 public class TestHandler implements WebSocketMessageHandler{
     @Override
     public WebSocketMessage dispatch(WebSocketMessage msg) {
-        WebSocketMessage retur = new WebSocketMessage();
-        retur.action = "MESSAGE_RETURN";
-        retur.error = "OK";
-        retur.message = "Hi";
-        return retur;
+        return new WebSocketMessage("Hi", null, WebSocketMessage.Action.RESPONSE, this);
     }
 
     @Override

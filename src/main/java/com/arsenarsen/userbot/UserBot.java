@@ -11,13 +11,15 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.java_websocket.drafts.Draft_17;
+import net.dv8tion.jda.core.utils.SimpleLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.*;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ayy its mai bot
@@ -25,7 +27,8 @@ import java.util.Properties;
 public class UserBot extends ListenerAdapter {
 
     /* CONSTANTS */
-    public static final Logger LOGGER = LoggerFactory.getLogger(UserBot.class);
+    private static final Map<String, Logger> LOGGERS = new ConcurrentHashMap<>();
+    public static final Logger LOGGER = getLog(UserBot.class);
     public static final String VERSION = getVersion(); // Inflated because java wont let me do otherwise /shrug
     public static final Gson GSON = new Gson();
 
@@ -56,6 +59,37 @@ public class UserBot extends ListenerAdapter {
 
     /* METHODS */
     private UserBot(String... args) throws IOException {
+        SimpleLog.LEVEL = SimpleLog.Level.OFF;
+        SimpleLog.addListener(new SimpleLog.LogListener() {
+            @Override
+            public void onLog(SimpleLog log, SimpleLog.Level logLevel, Object message) {
+                switch (logLevel){
+                    case ALL:
+                    case INFO:
+                        getLog(log.name).info(String.valueOf(message));
+                        break;
+                    case FATAL:
+                        LOGGER.error(String.valueOf(message));
+                        break;
+                    case WARNING:
+                        LOGGER.warn(String.valueOf(message));
+                        break;
+                    case DEBUG:
+                        LOGGER.debug(String.valueOf(message));
+                        break;
+                    case TRACE:
+                        LOGGER.trace(String.valueOf(message));
+                        break;
+                    case OFF:
+                        break;
+                }
+            }
+
+            @Override
+            public void onError(SimpleLog log, Throwable err) {
+
+            }
+        });
         String token;
         if (!WORKING_DIR.exists()) {
             WORKING_DIR.mkdirs();
@@ -88,11 +122,18 @@ public class UserBot extends ListenerAdapter {
         }
         if(args.length == 1 && args[0].matches("[\\d]+"))
         try {
-            UserBotWebSocketServer.instance = new UserBotWebSocketServer(Integer.parseInt(args[0]), new Draft_17());
-            UserBotWebSocketServer.instance.start();
+            new UserBotWebSocketServer(Integer.parseInt(args[0])).start();
         }catch (Exception t){
             LOGGER.error("Error starting websocket", t);
         }
+    }
+
+    private static Logger getLog(String name) {
+        return LOGGERS.computeIfAbsent(name, LoggerFactory::getLogger);
+    }
+
+    public static Logger getLog(Class<?> clazz) {
+        return getLog(clazz.getName());
     }
 
     public Properties getConfig() {

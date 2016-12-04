@@ -2,7 +2,7 @@ package com.arsenarsen.userbot.command.commands;
 
 import com.arsenarsen.userbot.command.Command;
 import com.arsenarsen.userbot.util.IOUtils;
-import com.arsenarsen.userbot.util.Messages;
+import com.arsenarsen.userbot.util.DiscordUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -48,13 +48,13 @@ public class Google implements Command {
                 }
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setTitle(title);
-                embedBuilder.setAuthor(doc.title().substring(0, doc.title().lastIndexOf("-") - 1), doc.location(), IOUtils.getIcon(doc));
+                embedBuilder.setAuthor(doc.title().substring(0, doc.title().lastIndexOf("-") - 1), doc.location(), IOUtils.getIcon(doc.location()));
                 embedBuilder.setDescription(body);
                 embedBuilder.setUrl(url);
                 embedBuilder.setColor(new Color((int) (0x1000000 * Math.random())));
                 msg.editMessage(new MessageBuilder().setEmbed(embedBuilder.build()).build()).queue();
             } catch (URISyntaxException | IOException e) {
-                Messages.updateWithException("Error occured!", e, msg);
+                DiscordUtils.updateWithException("Error occured!", e, msg);
             }
         }
     }

@@ -3,7 +3,7 @@ package com.arsenarsen.userbot.command.commands;
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.Command;
 import com.arsenarsen.userbot.util.IOUtils;
-import com.arsenarsen.userbot.util.Messages;
+import com.arsenarsen.userbot.util.DiscordUtils;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
@@ -51,12 +51,12 @@ public class JavaREPL implements Command {
         if (args.length > 0) {
             String javaHome = System.getProperty("java.home");
             if (ToolProvider.getSystemJavaCompiler() == null) {
-                System.setProperty("java.home", System.getenv("JDK_HOME"));
+                System.setProperty("java.home", System.getenv().getOrDefault("JDK_HOME", ""));
                 if (ToolProvider.getSystemJavaCompiler() == null) {
-                    System.setProperty("java.home", System.getenv("JAVA_HOME"));
+                    System.setProperty("java.home", System.getenv().getOrDefault("JAVA_HOME", ""));
                     if (ToolProvider.getSystemJavaCompiler() == null) {
                         msg.editMessage("You are missing JDK on your system! Halting..\n\n" +
-                                "If you believe this is an error set JDK_HOME and JAVA_HOME enviromentals to point to it.").queue();
+                                "If you believe this is an error set JDK_HOME and/or JAVA_HOME enviromentals to point to it.").queue();
                         return;
                     }
                 }
@@ -82,9 +82,9 @@ public class JavaREPL implements Command {
                         msg.editMessage("Input: ```java\n" + arg + "\n```\n"
                                 + "Output: " + method.invoke(null, channel)).queue();
                     } catch (IllegalAccessException | NoSuchMethodException e) {
-                        Messages.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Could not execute!\n", e, msg);
+                        DiscordUtils.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Could not execute!\n", e, msg);
                     } catch (InvocationTargetException e) {
-                        Messages.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Could not execute!\n", e.getCause(), msg);
+                        DiscordUtils.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Could not execute!\n", e.getCause(), msg);
                     }
                 };
                 Future future = timer.submit(task);
@@ -95,7 +95,7 @@ public class JavaREPL implements Command {
                 IOUtils.delete(classStorage);
                 IOUtils.delete(classFile.getParentFile());
             } catch (IOException e) {
-                Messages.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Compilation failure!", e, msg);
+                DiscordUtils.updateWithException("Input: ```java\n" + arg + "\n```\n" + "Compilation failure!", e, msg);
             } catch (ClassNotFoundException ignored) {
                 msg.editMessage("Input: ```java\n" + arg + "\n```\n" + "Could not compile!\n```\n" + errorStream + "\n```").queue();
             } catch (InterruptedException | ExecutionException | TimeoutException ignored) {

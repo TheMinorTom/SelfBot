@@ -1,5 +1,6 @@
 package com.arsenarsen.userbot.util;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
@@ -36,12 +37,13 @@ public class IOUtils {
         return ret;
     }
 
-    public static String getIcon(Document doc) throws URISyntaxException {
+    public static String getIcon(String url) throws URISyntaxException, IOException {
         String meta;
         try {
+            Document doc = Jsoup.connect(url).get();
             meta = doc.head().select("link[href~=.*\\.ico]").first().attr("abs:href");
         } catch (NullPointerException ignored){
-            String uri = new URI(doc.location()).getHost();
+            String uri = new URI(url).getHost();
             return uri.endsWith("/") ? uri + "favicon.ico" : uri + "/favicon.ico";
         }
         return meta;

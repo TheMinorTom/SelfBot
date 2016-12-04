@@ -2,7 +2,7 @@ package com.arsenarsen.userbot.command;
 
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.commands.*;
-import com.arsenarsen.userbot.util.Messages;
+import com.arsenarsen.userbot.util.DiscordUtils;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -30,7 +30,6 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new JavaREPL());
         registerCommand(new Flippin());
         registerCommand(new Quote());
-        registerCommand(new Update());
         registerCommand(new Todo());
         registerCommand(new AFK());
         registerCommand(new Execute());
@@ -42,6 +41,7 @@ public class CommandDispatcher extends ListenerAdapter {
         registerCommand(new Sigh());
         registerCommand(new Google());
         registerCommand(new CalmDown());
+        registerCommand(new Ping());
     }
 
     public boolean registerCommand(Command command) {
@@ -77,7 +77,7 @@ public class CommandDispatcher extends ListenerAdapter {
                         try{
                             c.dispatch(split, channel, msg);
                         } catch (Exception e){
-                            Messages.updateWithException("There was an error processing this command!", e, msg);
+                            DiscordUtils.updateWithException("There was an error processing this command!", e, msg);
                         }
                     });
                     break;

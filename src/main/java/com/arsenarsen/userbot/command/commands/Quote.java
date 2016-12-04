@@ -2,6 +2,7 @@ package com.arsenarsen.userbot.command.commands;
 
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.Command;
+import com.arsenarsen.userbot.util.DiscordUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -23,7 +24,7 @@ public class Quote implements Command {
                         String cnt = msg.getRawContent();
                         cnt = cnt.substring(UserBot.getInstance().getConfig().getProperty("prefix").length() + getName().length() + 1);
                         cnt = cnt.substring(args[0].length());
-                        EmbedBuilder builder = new EmbedBuilder().setAuthor(auth.getName() + '#' + auth.getDiscriminator(), null, auth.getAvatarUrl())
+                        EmbedBuilder builder = new EmbedBuilder().setAuthor(auth.getName() + '#' + auth.getDiscriminator(), null, DiscordUtils.gerAvatar(auth))
                                 .setDescription(msg2.getRawContent())
                                 .setColor(new Color((int) (Math.random() * 0x1000000)))
                                 .setFooter(msg2.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), null)

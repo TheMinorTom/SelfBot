@@ -1,20 +1,36 @@
 package com.arsenarsen.userbot.websocket;
 
+import com.arsenarsen.userbot.UserBot;
+
 /*
  *  This file is Copyright 2016 by MinorTom and licensed under the MIT License
  */
 public class WebSocketMessage {
-    public WebSocketMessage(){
 
+    // Suppressed due to these being converted to JSON
+    @SuppressWarnings("FieldCanBeLocal")
+    private String handler = "";
+    @SuppressWarnings("FieldCanBeLocal")
+    private String action = "";
+    @SuppressWarnings("FieldCanBeLocal")
+    private String error = "";
+    @SuppressWarnings("FieldCanBeLocal")
+    private String message = "";
+
+    public WebSocketMessage(String message, String error, Action action, WebSocketMessageHandler handler) {
+        this.message = message;
+        this.error = error;
+        this.action = action.name();
+        this.handler = handler == null ? null : handler.getName();
     }
 
-    // JSON for Testing: {"handler":"","action":"","error":"","message":""}
+    @Override
+    public String toString() {
+        return UserBot.GSON.toJson(this);
+    }
 
-    public String handler = "";
-
-    public String action = "";
-
-    public String error = "";
-
-    public String message = "";
+    public enum Action {
+        RESPONSE,
+        NOTIFY, REQUEST
+    }
 }

@@ -3,6 +3,7 @@ package com.arsenarsen.userbot.util;
 import com.arsenarsen.userbot.UserBot;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.User;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -11,7 +12,7 @@ import java.io.StringWriter;
  * <br>
  * Created by Arsen on 22.9.16..
  */
-public class Messages {
+public class DiscordUtils {
 
     public static void sendException(String msg, Throwable e, MessageChannel channel){
         StringWriter sw = new StringWriter();
@@ -38,5 +39,9 @@ public class Messages {
 
     public static void edit(Message msg, String s) {
         msg.editMessage(s.substring(0, Math.min(s.length(), 1999))).queue();
+    }
+
+    public static String gerAvatar(User author) {
+        return author.getAvatarId() != null ? author.getAvatarUrl() : author.getDefaultAvatarUrl();
     }
 }

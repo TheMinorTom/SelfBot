@@ -2,6 +2,7 @@ package com.arsenarsen.userbot.command.commands;
 
 import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.Command;
+import com.arsenarsen.userbot.util.DiscordUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -19,7 +20,7 @@ public class Embed implements Command {
         cnt = cnt.substring(UserBot.getInstance().getConfig().getProperty("prefix").length());
         msg.editMessage(new MessageBuilder().setEmbed(new EmbedBuilder()
                 .setColor(new Color((int) (Math.random() * 0x1000000)))
-                .setAuthor(msg.getAuthor().getName() + '#' + msg.getAuthor().getDiscriminator(), null, msg.getAuthor().getAvatarUrl())
+                .setAuthor(msg.getAuthor().getName() + '#' + msg.getAuthor().getDiscriminator(), null, DiscordUtils.gerAvatar(msg.getAuthor()))
                 .setDescription(cnt).build()).build()).queue();
     }
 

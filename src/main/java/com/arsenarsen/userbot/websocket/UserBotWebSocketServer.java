@@ -6,32 +6,41 @@ package com.arsenarsen.userbot.websocket;
 
 import com.arsenarsen.userbot.UserBot;
 import org.java_websocket.WebSocket;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.framing.FrameBuilder;
-import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
+import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketServer {
-    public static UserBotWebSocketServer instance;
+    private static UserBotWebSocketServer instance;
+    public static Logger LOGGER = UserBot.getLog(UserBotWebSocketServer.class);
+    private UserBotWebSocket handler;
+    private Set<WebSocket> connections = ConcurrentHashMap.newKeySet();
 
-    public UserBotWebSocketServer(int port, Draft d) throws UnknownHostException {
-        super(new InetSocketAddress(port), Collections.singletonList(d));
-        UserBotWebSocket.register();
+    public UserBotWebSocketServer(int port) throws UnknownHostException {
+        super(new InetSocketAddress(port));
+        handler = new UserBotWebSocket();
+        instance = this;
+    }
+
+    public static UserBotWebSocketServer getInstance() {
+        return instance;
     }
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        UserBot.LOGGER.info("WebSocket Connection opened");
+        UserBot.LOGGER.info("WebSocket Connection opened! Connection: {}! Handshake: {}!", conn, handshake);
+        connections.add(conn);
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        UserBot.LOGGER.info("WebSocket Connection closed");
+        UserBot.LOGGER.info("WebSocket Connection closed! Connection: {}! Reason: {}! Remote: {}!", conn, reason, remote);
+        connections.remove(conn);
     }
 
     @Override
@@ -42,8 +51,8 @@ public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketS
     @Override
     public void onMessage(WebSocket conn, String message) {
         try {
-            conn.send(UserBot.GSON.toJson(UserBotWebSocket.handleEvent(UserBot.GSON.fromJson(message, WebSocketMessage.class))));
-        } catch (Throwable e) {
+            conn.send(UserBot.GSON.toJson(handler.handleEvent(UserBot.GSON.fromJson(message, WebSocketMessage.class))));
+        } catch (Exception e) {
             UserBot.LOGGER.error("WebSocket Message Receive error", e);
         }
     }
@@ -53,10 +62,11 @@ public class UserBotWebSocketServer extends org.java_websocket.server.WebSocketS
         onMessage(conn, new String(blob.array()));
     }
 
-    @Override
-    public void onWebsocketMessageFragment(WebSocket conn, Framedata frame) {
-        FrameBuilder builder = (FrameBuilder) frame;
-        builder.setTransferemasked(false);
-        // But what does this mean?
+    public void send(WebSocketMessage message) {
+        connections.forEach(conn -> conn.send(message.toString()));
+    }
+
+    public Set<WebSocket> getConnections() {
+        return connections;
     }
 }
