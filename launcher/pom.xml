@@ -56,7 +56,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.arsenarsen.userbot.Launcher</mainClass>
+                            <mainClass>com.arsenarsen.userbot.LauncherEntry</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

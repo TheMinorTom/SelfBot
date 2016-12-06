@@ -1,6 +1,6 @@
 package com.arsenarsen.userbot.websockets.handler;
 
-import com.arsenarsen.userbot.Launcher;
+import com.arsenarsen.userbot.LauncherEntry;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +20,7 @@ public class Handler {
             Message msg = Message.fromJson(message);
             handlers.stream().filter(h -> h.getName().equalsIgnoreCase(msg.getHandler())).forEach(s -> s.handle(msg));
         } catch (Exception e){
-            Launcher.LOGGER.error("WebSocket handler error!",e);
+            LauncherEntry.LOGGER.error("WebSocket handler error!",e);
         }
     }
 }

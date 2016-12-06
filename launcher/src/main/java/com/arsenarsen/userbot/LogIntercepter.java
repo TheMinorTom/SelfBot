@@ -9,7 +9,7 @@ import com.arsenarsen.userbot.guiutils.ExceptionBox;
 public class LogIntercepter extends Filter<ILoggingEvent> {
     @Override
     public FilterReply decide(ILoggingEvent event) {
-        if (!Launcher.nogui &&event.getThrowableProxy() != null && event.getThrowableProxy() instanceof ThrowableProxy) {
+        if (!LauncherEntry.nogui &&event.getThrowableProxy() != null && event.getThrowableProxy() instanceof ThrowableProxy) {
             @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
             Throwable throwable = ((ThrowableProxy) event.getThrowableProxy()).getThrowable();
             if (throwable != null) {

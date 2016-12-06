@@ -5,7 +5,7 @@ import com.arsenarsen.userbot.websockets.handler.EventHandler;
 import com.arsenarsen.userbot.websockets.handler.Message;
 
 import static ch.qos.logback.classic.Level.*;
-import static com.arsenarsen.userbot.Launcher.LOGGER;
+import static com.arsenarsen.userbot.LauncherEntry.LOGGER;
 
 public class LogHandler implements EventHandler {
     @Override

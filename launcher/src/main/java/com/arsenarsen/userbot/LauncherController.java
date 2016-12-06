@@ -19,8 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.Future;
 
-import static com.arsenarsen.userbot.Launcher.LOGGER;
-
 public class LauncherController {
 
     public static final File WORKING_DIR = new File(getAppData(), "Discord-UserBot");
@@ -75,7 +73,7 @@ public class LauncherController {
                 target.createNewFile();
             }
             target.deleteOnExit();
-            task = Launcher.MAIN_POOL.submit(() -> {
+            task = LauncherEntry.MAIN_POOL.submit(() -> {
                 int status = 0;
                 try {
                     setRunning(true);
@@ -102,7 +100,7 @@ public class LauncherController {
                     }
                     setRunning(false);
                 } catch (IOException e) {
-                    LOGGER.error("Could not download/start the UserBot!", e);
+                    LauncherEntry.LOGGER.error("Could not download/start the UserBot!", e);
                     Alert alert =
                             new Alert(Alert.AlertType.ERROR, "Could not download/start UserBot!\n" + e.getMessage());
                     alert.setResizable(true);
@@ -117,7 +115,7 @@ public class LauncherController {
                 }
             });
         } catch (IOException e) {
-            LOGGER.error("Could not download the UserBot", e);
+            LauncherEntry.LOGGER.error("Could not download the UserBot", e);
             Alert alert =
                     new Alert(Alert.AlertType.ERROR, "Could not download UserBot! " + e.getMessage());
             alert.setResizable(true);

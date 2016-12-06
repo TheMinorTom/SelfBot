@@ -1,6 +1,6 @@
 package com.arsenarsen.userbot.websockets.handler;
 
-import com.arsenarsen.userbot.Launcher;
+import com.arsenarsen.userbot.LauncherEntry;
 
 public class Message {
 
@@ -23,7 +23,7 @@ public class Message {
 
     @Override
     public String toString() {
-        return Launcher.GSON.toJson(this);
+        return LauncherEntry.GSON.toJson(this);
     }
 
     public String getHandler() {
@@ -43,7 +43,7 @@ public class Message {
     }
 
     public static Message fromJson(String json){
-        return Launcher.GSON.fromJson(json, Message.class);
+        return LauncherEntry.GSON.fromJson(json, Message.class);
     }
 
     public enum Action {
