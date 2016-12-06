@@ -1,5 +1,6 @@
 package com.arsenarsen.userbot.command.commands;
 
+import com.arsenarsen.userbot.UserBot;
 import com.arsenarsen.userbot.command.Command;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -24,6 +25,7 @@ public class CalmDown implements Command {
             }
         } catch (IOException e) {
             msg.editMessage("You cannot be calmed D:").queue();
+            UserBot.LOGGER.error("I CANT CALM YOU D:", e);
         }
     }
 

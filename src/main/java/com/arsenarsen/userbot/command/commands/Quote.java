@@ -34,7 +34,7 @@ public class Quote implements Command {
                         }
                         msg.editMessage(new MessageBuilder()
                                 .setEmbed(builder.build())
-                                .appendString(cnt)
+                                .append(cnt)
                                 .build()).queue();
                     }
                 });

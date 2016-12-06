@@ -69,16 +69,16 @@ public class UserBot extends ListenerAdapter {
                         getLog(log.name).info(String.valueOf(message));
                         break;
                     case FATAL:
-                        LOGGER.error(String.valueOf(message));
+                        getLog(log.name).error(String.valueOf(message));
                         break;
                     case WARNING:
-                        LOGGER.warn(String.valueOf(message));
+                        getLog(log.name).warn(String.valueOf(message));
                         break;
                     case DEBUG:
-                        LOGGER.debug(String.valueOf(message));
+                        getLog(log.name).debug(String.valueOf(message));
                         break;
                     case TRACE:
-                        LOGGER.trace(String.valueOf(message));
+                        getLog(log.name).trace(String.valueOf(message));
                         break;
                     case OFF:
                         break;
@@ -119,6 +119,7 @@ public class UserBot extends ListenerAdapter {
             });
         } catch (RateLimitedException | LoginException e) {
             LOGGER.error("Could not log in!", e);
+            System.exit(1);
         }
         if(args.length == 1 && args[0].matches("[\\d]+"))
         try {
