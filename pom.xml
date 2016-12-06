@@ -6,7 +6,11 @@
 
     <groupId>com.arsenarsen</groupId>
     <artifactId>UserBot</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-#${build.number}</version>
+    <modules>
+        <module>launcher</module>
+    </modules>
 
 
     <repositories>

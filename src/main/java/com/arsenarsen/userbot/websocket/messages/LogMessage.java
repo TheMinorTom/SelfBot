@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 
 public class LogMessage extends WebSocketMessage {
     public LogMessage(ILoggingEvent event) {
-        super(renderEvent(event), null, Action.NOTIFY, null);
+        super(event.getLevel().levelStr + "\u200B" + renderEvent(event), null, Action.NOTIFY, "LOG");
     }
 
     private static String renderEvent(ILoggingEvent event) {

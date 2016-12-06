@@ -1,32 +1,29 @@
-package com.arsenarsen.userbot.websocket;
+package com.arsenarsen.userbot.websockets.handler;
 
-import com.arsenarsen.userbot.UserBot;
+import com.arsenarsen.userbot.Launcher;
 
-/*
- *  This file is Copyright 2016 by MinorTom and licensed under the MIT License
- */
-public class WebSocketMessage {
+public class Message {
 
     // Suppressed due to these being converted to JSON
     @SuppressWarnings("FieldCanBeLocal")
     private String handler = "";
     @SuppressWarnings("FieldCanBeLocal")
-    private String action = "";
+    private Action action;
     @SuppressWarnings("FieldCanBeLocal")
     private String error = "";
     @SuppressWarnings("FieldCanBeLocal")
     private String message = "";
 
-    public WebSocketMessage(String message, String error, Action action, String handler) {
+    public Message(String message, String error, Action action, EventHandler handler) {
         this.message = message;
         this.error = error;
-        this.action = action.name();
-        this.handler = handler;
+        this.action = action;
+        this.handler = handler == null ? null : handler.getName();
     }
 
     @Override
     public String toString() {
-        return UserBot.GSON.toJson(this);
+        return Launcher.GSON.toJson(this);
     }
 
     public String getHandler() {
@@ -34,7 +31,7 @@ public class WebSocketMessage {
     }
 
     public Action getAction() {
-        return Action.get(action);
+        return action;
     }
 
     public String getError() {
@@ -43,6 +40,10 @@ public class WebSocketMessage {
 
     public String getMessage() {
         return message;
+    }
+
+    public static Message fromJson(String json){
+        return Launcher.GSON.fromJson(json, Message.class);
     }
 
     public enum Action {
