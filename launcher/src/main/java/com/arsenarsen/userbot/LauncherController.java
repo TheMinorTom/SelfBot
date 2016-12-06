@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 
 public class LauncherController {
 
-    public static final File WORKING_DIR = new File(getAppData(), "Discord-UserBot");
+    public static final File WORKING_DIR = new File(getAppData(), ".Discord-UserBot");
     public static URL DOWNLOAD_URL = download();
 
     private static URL download() {
